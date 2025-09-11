@@ -93,7 +93,6 @@ lint = [
 
 develop = [
     "clinicedc",
-    "edc-glucose",
     'argon2-cffi',
     'python-memcached',
     'django-environ',
@@ -108,18 +107,15 @@ develop = [
     'django-logentry-admin',
     'django-admin-rangefilter',
     'django-db-views',
-    "model-bakery>=1.20.5",
-    "faker>=37.5.3",
-    "time-machine>=2.17.0",
     "ipython>=9.5.0",
 ]
 
 [tool.uv.sources]
 clinicedc-tests = { workspace = true }
+clinicedc = { path = "../clinicedc/clinicedc", editable = true }
 django-audit-fields = { path = "../django-audit-fields", editable = true }
 django-crypto-fields = { path = "../django-crypto-fields", editable = true }
 django-revision = { path = "../django-revision", editable = true }
 django-multisite2 = { path = "../django-multisite2", editable = true }
-edc-glucose = { path = "../edc-glucose", editable = true }
 edc-test-settings = { path = "../edc-test-settings", editable = true }
 edc-test-utils = { path = "../edc-test-utils", editable = true }
