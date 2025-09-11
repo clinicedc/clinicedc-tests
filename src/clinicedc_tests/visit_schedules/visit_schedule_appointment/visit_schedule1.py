@@ -1,9 +1,9 @@
 from dateutil.relativedelta import relativedelta
-
 from edc_consent.consent_definition import ConsentDefinition
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.visit import Visit
 from edc_visit_schedule.visit_schedule import VisitSchedule
+
 from .crfs import crfs, crfs_missed, crfs_unscheduled, requisitions
 
 

@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from dateutil.relativedelta import relativedelta
-
 from edc_visit_schedule.constants import MONTH0, MONTH1, MONTH2, MONTH3, MONTH4
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.visit import Crf, CrfCollection, Visit

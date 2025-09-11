@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib import admin
-from django_audit_fields import audit_fieldset_tuple, ModelAdminAuditFieldsMixin
-
+from django_audit_fields import ModelAdminAuditFieldsMixin, audit_fieldset_tuple
 from edc_crf.modelform_mixins import CrfModelFormMixin
 from edc_fieldsets.fieldset import Fieldset
 from edc_fieldsets.fieldsets_modeladmin_mixin import FieldsetsModelAdminMixin
@@ -14,6 +13,7 @@ from edc_model_admin.mixins import (
     TemplatesModelAdminMixin,
 )
 from edc_visit_tracking.modeladmin_mixins import CrfModelAdminMixin
+
 from .admin_site import clinicedc_tests_admin
 from .form_labels import MyCustomLabelCondition
 from .forms import TestModel3Form
@@ -32,7 +32,6 @@ from .models import (
     TestModel5,
     TestModel6,
 )
-
 
 visit_two_fieldset = Fieldset(
     "f4",

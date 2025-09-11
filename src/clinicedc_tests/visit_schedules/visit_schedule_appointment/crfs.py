@@ -13,7 +13,9 @@ class MockPanel(DummyPanel):
     """
 
     def __init__(self, name):
-        super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
+        super().__init__(
+            requisition_model="clinicedc_tests.subjectrequisition", name=name
+        )
 
 
 panel_one = MockPanel(name="one")

@@ -9,7 +9,6 @@ from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
-
 try:
     from multisite import SiteID
 except ModuleNotFoundError:
@@ -68,29 +67,13 @@ class DefaultTestSettings:
         add_adverse_event_dashboard_middleware=None,
         add_multisite_middleware=None,
         template_dirs=None,
-        excluded_apps=None,
         selected_database: str = None,
         **kwargs,
     ):
-        # from django.db.backends.signals import connection_created
-        # from edc_utils.sqlite import activate_foreign_keys
-
-        # connection_created.connect(activate_foreign_keys)
         self.calling_file = os.path.basename(calling_file) if calling_file else None
         self.base_dir = base_dir or kwargs.get("BASE_DIR")
         self.app_name = app_name or kwargs.get("APP_NAME")
         self.selected_database = selected_database or "sqlite"
-        # self.installed_apps = [
-        #     app
-        #     for app in (kwargs.get("INSTALLED_APPS") or get_installed_apps_for_tests())
-        #     if app not in (excluded_apps or [])
-        # ]
-        # self.installed_apps.extend(kwargs.get("EXTRA_INSTALLED_APPS") or [])
-        # try:
-        #     self.installed_apps.remove("edc_appconfig.apps.AppConfig")
-        # except ValueError:
-        #     pass
-        # self.installed_apps.append("edc_appconfig.apps.AppConfig")
         self.installed_apps = kwargs.get("INSTALLED_APPS")
 
         self.settings = dict(
@@ -101,8 +84,7 @@ class DefaultTestSettings:
             or self.base_dir / self.app_name / "tests" / "etc",
             TEST_DIR=kwargs.get("TEST_DIR") or self.base_dir / self.app_name / "tests",
             HOLIDAY_FILE=(
-                kwargs.get("HOLIDAY_FILE")
-                or files('clinicedc_tests') / 'holidays.csv'
+                kwargs.get("HOLIDAY_FILE") or files("clinicedc_tests") / "holidays.csv"
             ),
         )
 

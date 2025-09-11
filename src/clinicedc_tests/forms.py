@@ -1,5 +1,4 @@
 from django import forms
-
 from edc_action_item.forms import ActionItemFormMixin
 from edc_appointment.form_validator_mixins import NextAppointmentCrfFormValidatorMixin
 from edc_appointment.modelform_mixins import NextAppointmentCrfModelFormMixin

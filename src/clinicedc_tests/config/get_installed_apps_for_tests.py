@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-def get_installed_apps_for_tests(apps_to_test:list[str] | None = None):
+
+def get_installed_apps_for_tests(apps_to_test: list[str] | None = None):
     return [
         "django.contrib.admin",
         "django.contrib.auth",

@@ -1,5 +1,4 @@
 from dateutil.relativedelta import relativedelta
-
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.tests.dummy_panel import DummyPanel
 from edc_visit_schedule.visit import (
@@ -18,7 +17,9 @@ class Panel(DummyPanel):
     """
 
     def __init__(self, name):
-        super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
+        super().__init__(
+            requisition_model="clinicedc_tests.subjectrequisition", name=name
+        )
 
 
 crfs = CrfCollection(

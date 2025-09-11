@@ -1,6 +1,5 @@
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
-
 from edc_dashboard.views import AdministrationView
 from edc_listboard.views import SubjectListboardView
 from edc_protocol.research_protocol_config import ResearchProtocolConfig

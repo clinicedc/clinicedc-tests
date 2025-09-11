@@ -1,6 +1,5 @@
 from django.conf import settings
-
-from edc_lab import bc, LabProfile, pl, Process, site_labs
+from edc_lab import LabProfile, Process, bc, pl, site_labs
 from edc_lab_panel.panels import fbc_panel, lft_panel, rft_panel, vl_panel
 
 lab_profile = LabProfile(
