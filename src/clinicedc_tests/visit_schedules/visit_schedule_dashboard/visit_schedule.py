@@ -13,7 +13,7 @@ from edc_visit_schedule.visit_schedule import VisitSchedule
 
 from .lab_profiles import panel_one, panel_two
 
-app_label = "tests"
+app_label = "clinicedc_tests"
 
 
 class MockPanel(DummyPanel):

@@ -3,10 +3,10 @@ from dateutil.relativedelta import relativedelta
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.visit import Crf, CrfCollection, Visit
 from edc_visit_schedule.visit_schedule import VisitSchedule
-from tests.consents import consent_v1
+from clinicedc_tests.consents import consent_v1
 
 crfs = CrfCollection(
-    Crf(show_order=1, model="tests.medicationadherence", required=True)
+    Crf(show_order=1, model="clinicedc_tests.medicationadherence", required=True)
 )
 
 visit = Visit(
@@ -27,7 +27,7 @@ visit = Visit(
 schedule_adherence = Schedule(
     name="schedule_adherence",
     onschedule_model="edc_visit_schedule.onschedule",
-    offschedule_model="tests.offschedule",
+    offschedule_model="clinicedc_tests.offschedule",
     appointment_model="edc_appointment.appointment",
     consent_definitions=[consent_v1],
 )

@@ -13,7 +13,7 @@ class MockPanel(DummyPanel):
     """
 
     def __init__(self, name):
-        super().__init__(requisition_model="tests.subjectrequisition", name=name)
+        super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
 
 
 panel_one = MockPanel(name="one")
@@ -24,11 +24,11 @@ panel_five = MockPanel(name="five")
 panel_six = MockPanel(name="six")
 
 crfs = CrfCollection(
-    Crf(show_order=1, model="tests.crfsix", required=True),
-    Crf(show_order=2, model="tests.crfseven", required=True),
-    Crf(show_order=3, model="tests.crfthree", required=True),
-    Crf(show_order=4, model="tests.crffour", required=True),
-    Crf(show_order=5, model="tests.crffive", required=True),
+    Crf(show_order=1, model="clinicedc_tests.crfsix", required=True),
+    Crf(show_order=2, model="clinicedc_tests.crfseven", required=True),
+    Crf(show_order=3, model="clinicedc_tests.crfthree", required=True),
+    Crf(show_order=4, model="clinicedc_tests.crffour", required=True),
+    Crf(show_order=5, model="clinicedc_tests.crffive", required=True),
 )
 
 crfs_missed = CrfCollection(
@@ -47,7 +47,7 @@ requisitions = RequisitionCollection(
 
 
 crfs_unscheduled = CrfCollection(
-    Crf(show_order=1, model="tests.crfsix", required=True),
-    Crf(show_order=3, model="tests.crfthree", required=True),
-    Crf(show_order=5, model="tests.crffive", required=True),
+    Crf(show_order=1, model="clinicedc_tests.crfsix", required=True),
+    Crf(show_order=3, model="clinicedc_tests.crfthree", required=True),
+    Crf(show_order=5, model="clinicedc_tests.crffive", required=True),
 )

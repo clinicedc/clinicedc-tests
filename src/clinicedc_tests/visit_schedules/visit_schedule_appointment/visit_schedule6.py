@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 
 def get_visit_schedule6(cdef: ConsentDefinition | None = None) -> VisitSchedule:
-    app_label = "tests"
+    app_label = "clinicedc_tests"
 
     cdef = cdef or consent_v1
 

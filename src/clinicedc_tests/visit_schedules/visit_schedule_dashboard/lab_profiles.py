@@ -18,7 +18,7 @@ panel_two = RequisitionPanel(
 )
 
 lab_profile = LabProfile(
-    name="lab_profile", requisition_model="tests.subjectrequisition"
+    name="lab_profile", requisition_model="clinicedc_tests.subjectrequisition"
 )
 
 lab_profile.add_panel(panel_one)

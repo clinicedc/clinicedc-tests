@@ -18,15 +18,15 @@ class Panel(DummyPanel):
     """
 
     def __init__(self, name):
-        super().__init__(requisition_model="tests.subjectrequisition", name=name)
+        super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
 
 
 crfs = CrfCollection(
-    Crf(show_order=1, model="tests.crfone", required=True),
-    Crf(show_order=2, model="tests.crftwo", required=True),
-    Crf(show_order=3, model="tests.crfthree", required=True),
-    Crf(show_order=4, model="tests.crffour", required=True),
-    Crf(show_order=5, model="tests.crffive", required=True),
+    Crf(show_order=1, model="clinicedc_tests.crfone", required=True),
+    Crf(show_order=2, model="clinicedc_tests.crftwo", required=True),
+    Crf(show_order=3, model="clinicedc_tests.crfthree", required=True),
+    Crf(show_order=4, model="clinicedc_tests.crffour", required=True),
+    Crf(show_order=5, model="clinicedc_tests.crffive", required=True),
 )
 
 requisitions = RequisitionCollection(
@@ -43,14 +43,14 @@ def get_visit_schedule(cdef):
     visit_schedule = VisitSchedule(
         name="visit_schedule1",
         offstudy_model="edc_offstudy.subjectoffstudy",
-        death_report_model="tests.deathreport",
+        death_report_model="clinicedc_tests.deathreport",
         locator_model="edc_locator.subjectlocator",
     )
 
     schedule = Schedule(
         name="schedule1",
-        onschedule_model="tests.onscheduleone",
-        offschedule_model="tests.offscheduleone",
+        onschedule_model="clinicedc_tests.onscheduleone",
+        offschedule_model="clinicedc_tests.offscheduleone",
         consent_definitions=[cdef],
     )
 

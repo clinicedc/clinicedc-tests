@@ -11,7 +11,7 @@ from edc_lab_panel.panels import (
 
 lab_profile = LabProfile(
     name="lab_profile",
-    requisition_model="tests.subjectrequisition",
+    requisition_model="clinicedc_tests.subjectrequisition",
     reference_range_collection_name="my_reportables",
 )
 

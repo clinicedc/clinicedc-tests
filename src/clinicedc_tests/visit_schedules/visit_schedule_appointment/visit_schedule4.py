@@ -12,13 +12,13 @@ def get_visit_schedule4() -> VisitSchedule:
     visit_schedule4 = VisitSchedule(
         name="visit_schedule4",
         offstudy_model="edc_offstudy.subjectoffstudy",
-        death_report_model="tests.deathreport",
+        death_report_model="clinicedc_tests.deathreport",
     )
 
     schedule4 = Schedule(
         name="three_monthly_schedule",
-        onschedule_model="tests.onschedulethree",
-        offschedule_model="tests.offschedulethree",
+        onschedule_model="clinicedc_tests.onschedulethree",
+        offschedule_model="clinicedc_tests.offschedulethree",
         appointment_model="edc_appointment.appointment",
         consent_definitions=[consent_v1],
     )
