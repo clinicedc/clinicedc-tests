@@ -1,8 +1,8 @@
 from dateutil.relativedelta import relativedelta
-
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.visit import Crf, CrfCollection, Visit
 from edc_visit_schedule.visit_schedule import VisitSchedule
+
 from clinicedc_tests.consents import consent_v1
 
 crfs = CrfCollection(Crf(show_order=1, model="clinicedc_tests.crffour", required=True))

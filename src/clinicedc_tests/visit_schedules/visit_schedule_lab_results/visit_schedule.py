@@ -1,5 +1,4 @@
 from dateutil.relativedelta import relativedelta
-
 from edc_lab_panel.panels import (
     blood_glucose_panel,
     fbc_panel,

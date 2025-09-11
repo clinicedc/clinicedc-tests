@@ -16,8 +16,8 @@ from edc_utils import get_utcnow
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from edc_visit_tracking.constants import SCHEDULED
 from edc_visit_tracking.models import SubjectVisit
-
 from faker import Faker
+
 from .consents import consent_v1
 from .models import Alphabet, CrfFive, CrfFour, CrfSix, CrfThree, CrfWithInline2
 
@@ -66,7 +66,7 @@ class Helper:
             age_in_years=age_in_years,
             gender=gender,
             alive=alive,
-            ethnicity=ethnicity
+            ethnicity=ethnicity,
         )
 
         subject_consent = self.consent_subject(

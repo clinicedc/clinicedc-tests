@@ -1,5 +1,4 @@
 from dateutil.relativedelta import relativedelta
-
 from edc_consent.consent_definition import ConsentDefinition
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.tests.dummy_panel import DummyPanel

@@ -35,8 +35,12 @@ from edc_consent.model_mixins import (
 )
 from edc_constants.choices import YES_NO, YES_NO_NA
 from edc_constants.constants import YES
-from edc_crf.model_mixins import CrfInlineModelMixin, CrfModelMixin, CrfStatusModelMixin, \
-    CrfStatusModelMixin, CrfWithActionModelMixin
+from edc_crf.model_mixins import (
+    CrfInlineModelMixin,
+    CrfModelMixin,
+    CrfStatusModelMixin,
+    CrfWithActionModelMixin,
+)
 from edc_egfr.model_mixins import EgfrDropNotificationModelMixin, EgfrModelMixin
 from edc_export.managers import ExportHistoryManager
 from edc_export.model_mixins import ExportTrackingFieldsModelMixin
@@ -48,12 +52,19 @@ from edc_identifier.model_mixins import (
 from edc_lab.model_mixins import CrfWithRequisitionModelMixin, RequisitionModelMixin
 from edc_lab_panel.panels import fbc_panel, rft_panel
 from edc_lab_results import BLOOD_RESULTS_FBC_ACTION
-from edc_lab_results.model_mixins import BloodResultsMethodsModelMixin, BloodResultsModelMixin, \
-    HaemoglobinModelMixin, Hba1cModelMixin, HctModelMixin, PlateletsModelMixin, RbcModelMixin, \
-    WbcModelMixin
+from edc_lab_results.model_mixins import (
+    BloodResultsMethodsModelMixin,
+    BloodResultsModelMixin,
+    HaemoglobinModelMixin,
+    Hba1cModelMixin,
+    HctModelMixin,
+    PlateletsModelMixin,
+    RbcModelMixin,
+    WbcModelMixin,
+)
 from edc_list_data.model_mixins import BaseListModelMixin, ListModelMixin
 from edc_model import models as edc_models
-from edc_model.models import BaseUuidModel, BaseUuidModel, HistoricalRecords
+from edc_model.models import BaseUuidModel, HistoricalRecords
 from edc_model.validators import date_not_future, datetime_not_future
 from edc_offstudy.model_mixins import OffstudyModelMixin
 from edc_pharmacy.model_mixins import StudyMedicationCrfModelMixin
@@ -68,7 +79,7 @@ from edc_reportable.choices import REPORTABLE
 from edc_screening.model_mixins import EligibilityModelMixin, ScreeningModelMixin
 from edc_screening.screening_eligibility import ScreeningEligibility
 from edc_sites.managers import CurrentSiteManager
-from edc_sites.model_mixins import SiteModelMixin, SiteModelMixin
+from edc_sites.model_mixins import SiteModelMixin
 from edc_utils import get_utcnow
 from edc_visit_schedule.constants import OFFSCHEDULE_ACTION
 from edc_visit_schedule.model_mixins import (
@@ -78,7 +89,7 @@ from edc_visit_schedule.model_mixins import (
 )
 from edc_visit_schedule.models import VisitSchedule
 from edc_visit_tracking.model_mixins import VisitTrackingCrfModelMixin
-from edc_visit_tracking.models import SubjectVisit, SubjectVisit
+from edc_visit_tracking.models import SubjectVisit
 
 from .eligibility import MyScreeningEligibility
 
@@ -157,7 +168,7 @@ class SubjectScreening(ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel
     def get_consent_definition(self):
         pass
 
-    class Meta(ScreeningModelMixin.Meta,BaseUuidModel.Meta):
+    class Meta(ScreeningModelMixin.Meta, BaseUuidModel.Meta):
         pass
 
 
@@ -401,7 +412,9 @@ class SubjectIdentifierModel(NonUniqueSubjectIdentifierFieldMixin, BaseUuidModel
         pass
 
 
-class OffSchedule(SiteModelMixin, OffScheduleModelMixin, ActionModelMixin, BaseUuidModel):
+class OffSchedule(
+    SiteModelMixin, OffScheduleModelMixin, ActionModelMixin, BaseUuidModel
+):
     action_name = OFFSCHEDULE_ACTION
     offschedule_compare_dates_as_datetimes = False
 
@@ -1025,7 +1038,9 @@ class TestModel3(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=get_utcnow)
 
-    f1 = models.CharField(verbose_name="Is it what it is?", max_length=10, choices=YES_NO)
+    f1 = models.CharField(
+        verbose_name="Is it what it is?", max_length=10, choices=YES_NO
+    )
 
     f2 = models.CharField(
         verbose_name="Are they serious?", max_length=10, null=True, blank=True
@@ -1059,7 +1074,9 @@ class TestModel4(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=get_utcnow)
 
-    f1 = models.CharField(verbose_name="Is it what it is?", max_length=10, choices=YES_NO)
+    f1 = models.CharField(
+        verbose_name="Is it what it is?", max_length=10, choices=YES_NO
+    )
 
     f2 = models.CharField(
         verbose_name="Are they serious?", max_length=10, null=True, blank=True
@@ -1272,7 +1289,9 @@ class SpecimenResult(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=get_utcnow)
 
-    haemoglobin = models.DecimalField(decimal_places=1, max_digits=6, null=True, blank=True)
+    haemoglobin = models.DecimalField(
+        decimal_places=1, max_digits=6, null=True, blank=True
+    )
 
     haemoglobin_units = models.CharField(
         verbose_name="units",
@@ -1301,7 +1320,8 @@ class SpecimenResult(CrfModelMixin, BaseUuidModel):
     )
 
     results_reportable = models.CharField(
-        verbose_name="If any results are abnormal, are results within grade III " "or above?",
+        verbose_name="If any results are abnormal, are results within grade III "
+        "or above?",
         max_length=25,
         choices=YES_NO_NA,
     )
@@ -1374,6 +1394,7 @@ class BloodResultsHba1c(
     class Meta(edc_models.BaseUuidModel.Meta):
         verbose_name = "HbA1c"
         verbose_name_plural = "HbA1c"
+
 
 class ResultCrf(BloodResultsMethodsModelMixin, EgfrModelMixin, models.Model):
     lab_panel = rft_panel

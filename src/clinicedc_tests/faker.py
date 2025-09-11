@@ -1,6 +1,5 @@
-from faker.providers import BaseProvider
-
 from edc_lab.identifiers import RequisitionIdentifier
+from faker.providers import BaseProvider
 
 
 class EdcLabProvider(BaseProvider):

@@ -1,5 +1,4 @@
 from dateutil.relativedelta import relativedelta
-
 from edc_consent.consent_definition import ConsentDefinition
 from edc_protocol.research_protocol_config import ResearchProtocolConfig
 
