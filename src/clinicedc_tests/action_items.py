@@ -28,7 +28,7 @@ class OffscheduleAction(ActionWithNotification):
         # BLOOD_RESULTS_RFT_ACTION,
         # SUBJECT_TRANSFER_ACTION,
     ]
-    reference_model = "tests.offschedule"
+    reference_model = "clinicedc_tests.offschedule"
     show_link_to_changelist = True
     priority = HIGH_PRIORITY
     singleton = True
@@ -37,7 +37,7 @@ class OffscheduleAction(ActionWithNotification):
 class FormZeroAction(ActionWithNotification):
     name = "submit-form-zero"
     display_name = "Submit Form Zero"
-    reference_model = "tests.formzero"
+    reference_model = "clinicedc_tests.formzero"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     parent_action_names = ["submit-form-three"]
@@ -63,7 +63,7 @@ class TestPrnAction(Action):
 class FormThreeAction(Action):
     name = "submit-form-three"
     display_name = "Submit Form Three"
-    reference_model = "tests.formthree"
+    reference_model = "clinicedc_tests.formthree"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = [FormZeroAction.name]
@@ -73,10 +73,10 @@ class FormThreeAction(Action):
 class FormTwoAction(Action):
     name = "submit-form-two"
     display_name = "Submit Form Two"
-    reference_model = "tests.formtwo"
+    reference_model = "clinicedc_tests.formtwo"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    related_reference_model = "tests.formone"
+    related_reference_model = "clinicedc_tests.formone"
     related_reference_fk_attr = "form_one"
     next_actions = ["self"]
     parent_action_names = ["submit-form-two", "submit-form-one"]
@@ -85,7 +85,7 @@ class FormTwoAction(Action):
 class FormOneAction(Action):
     name = "submit-form-one"
     display_name = "Submit Form One"
-    reference_model = "tests.formone"
+    reference_model = "clinicedc_tests.formone"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = [FormTwoAction.name, FormThreeAction.name]
@@ -95,7 +95,7 @@ class FormOneAction(Action):
 class FormFourAction(Action):
     name = "submit-form-four"
     display_name = "Submit Form Four"
-    reference_model = "tests.formfour"
+    reference_model = "clinicedc_tests.formfour"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     parent_action_names = ["submit-form-one"]
@@ -113,19 +113,19 @@ class FormFourAction(Action):
 class FollowupAction(Action):
     name = "submit-followup"
     display_name = "Submit Followup"
-    reference_model = "tests.followup"
+    reference_model = "clinicedc_tests.followup"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = ["self"]
     related_reference_fk_attr = "initial"
-    related_reference_model = "tests.initial"
+    related_reference_model = "clinicedc_tests.initial"
     parent_action_names = ["submit-followup", "submit-initial"]
 
 
 class CrfTwoAction(Action):
     name = "submit-crf-two"
     display_name = "Submit Crf Two"
-    reference_model = "tests.crftwo"
+    reference_model = "clinicedc_tests.crftwo"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = ["self"]
@@ -135,7 +135,7 @@ class CrfTwoAction(Action):
 class CrfOneAction(Action):
     name = "submit-crf-one"
     display_name = "Submit Crf One"
-    reference_model = "tests.crfone"
+    reference_model = "clinicedc_tests.crfone"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = [CrfTwoAction.name]
@@ -144,7 +144,7 @@ class CrfOneAction(Action):
 class InitialAction(Action):
     name = "submit-initial"
     display_name = "Submit Initial"
-    reference_model = "tests.initial"
+    reference_model = "clinicedc_tests.initial"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = [FollowupAction.name]
@@ -153,7 +153,7 @@ class InitialAction(Action):
 class SingletonAction(Action):
     name = "singleton"
     display_name = "Singleton"
-    reference_model = "tests.formzero"
+    reference_model = "clinicedc_tests.formzero"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     singleton = True
@@ -162,7 +162,7 @@ class SingletonAction(Action):
 class CrfLongitudinalTwoAction(Action):
     name = "submit-crf-longitudinal-two"
     display_name = "Submit Crf Two"
-    reference_model = "tests.crflongitudinaltwo"
+    reference_model = "clinicedc_tests.crflongitudinaltwo"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = None
@@ -172,7 +172,7 @@ class CrfLongitudinalTwoAction(Action):
 class CrfLongitudinalOneAction(Action):
     name = "submit-crf-longitudinal-one"
     display_name = "Submit Crf One"
-    reference_model = "tests.crflongitudinalone"
+    reference_model = "clinicedc_tests.crflongitudinalone"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = [CrfLongitudinalTwoAction.name]

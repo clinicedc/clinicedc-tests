@@ -26,14 +26,14 @@ def get_visit_schedule(
     allow_unscheduled: bool = None,
 ):
     crfs = crfs or CrfCollection(
-        Crf(show_order=1, model="tests.crflongitudinalone", required=True),
-        Crf(show_order=2, model="tests.crflongitudinaltwo", required=True),
-        Crf(show_order=3, model="tests.crfthree", required=True),
-        Crf(show_order=4, model="tests.crffour", required=True),
-        Crf(show_order=5, model="tests.crffive", required=True),
-        Crf(show_order=6, model="tests.crfsix", required=True),
-        Crf(show_order=7, model="tests.crfseven", required=True),
-        Crf(show_order=8, model="tests.bloodresultsfbc", required=True),
+        Crf(show_order=1, model="clinicedc_tests.crflongitudinalone", required=True),
+        Crf(show_order=2, model="clinicedc_tests.crflongitudinaltwo", required=True),
+        Crf(show_order=3, model="clinicedc_tests.crfthree", required=True),
+        Crf(show_order=4, model="clinicedc_tests.crffour", required=True),
+        Crf(show_order=5, model="clinicedc_tests.crffive", required=True),
+        Crf(show_order=6, model="clinicedc_tests.crfsix", required=True),
+        Crf(show_order=7, model="clinicedc_tests.crfseven", required=True),
+        Crf(show_order=8, model="clinicedc_tests.bloodresultsfbc", required=True),
     )
 
     requisitions = requisitions or RequisitionCollection(
@@ -45,7 +45,7 @@ def get_visit_schedule(
     visit_schedule_name = visit_schedule_name or "visit_schedule"
     schedule_name = schedule_name or "schedule"
     onschedule_model = onschedule_model or "edc_visit_schedule.onschedule"
-    offschedule_model = offschedule_model or "tests.offschedule"
+    offschedule_model = offschedule_model or "clinicedc_tests.offschedule"
     visit_count = visit_count or 2
     allow_unscheduled = True if allow_unscheduled is None else allow_unscheduled
 

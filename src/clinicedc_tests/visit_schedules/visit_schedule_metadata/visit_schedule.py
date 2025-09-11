@@ -11,7 +11,7 @@ from edc_visit_schedule.visit import (
 )
 from edc_visit_schedule.visit_schedule import VisitSchedule
 
-app_label = "tests"
+app_label = "clinicedc_tests"
 
 
 def get_visit_schedule(cdef):
@@ -22,7 +22,7 @@ def get_visit_schedule(cdef):
         """
 
         def __init__(self, name):
-            super().__init__(requisition_model="tests.subjectrequisition", name=name)
+            super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
 
     crfs_prn = CrfCollection(
         Crf(show_order=100, model=f"{app_label}.prnone"),
@@ -155,7 +155,7 @@ def get_visit_schedule(cdef):
     schedule = Schedule(
         name="schedule",
         onschedule_model="edc_visit_schedule.onschedule",
-        offschedule_model="tests.offschedule",
+        offschedule_model="clinicedc_tests.offschedule",
         consent_definitions=[cdef],
         appointment_model="edc_appointment.appointment",
     )
@@ -167,7 +167,7 @@ def get_visit_schedule(cdef):
     visit_schedule = VisitSchedule(
         name="visit_schedule",
         offstudy_model="edc_offstudy.subjectoffstudy",
-        death_report_model="tests.deathreport",
+        death_report_model="clinicedc_tests.deathreport",
     )
 
     visit_schedule.add_schedule(schedule)

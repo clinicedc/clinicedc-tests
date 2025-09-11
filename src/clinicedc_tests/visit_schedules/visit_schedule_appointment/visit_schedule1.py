@@ -11,13 +11,13 @@ def get_visit_schedule1(cdef: ConsentDefinition) -> VisitSchedule:
     visit_schedule1 = VisitSchedule(
         name="visit_schedule1",
         offstudy_model="edc_offstudy.subjectoffstudy",
-        death_report_model="tests.deathreport",
+        death_report_model="clinicedc_tests.deathreport",
     )
 
     schedule1 = Schedule(
         name="schedule1",
-        onschedule_model="tests.onscheduleone",
-        offschedule_model="tests.offscheduleone",
+        onschedule_model="clinicedc_tests.onscheduleone",
+        offschedule_model="clinicedc_tests.offscheduleone",
         appointment_model="edc_appointment.appointment",
         consent_definitions=[cdef],
     )

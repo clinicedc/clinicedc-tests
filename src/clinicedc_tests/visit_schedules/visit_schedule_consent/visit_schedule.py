@@ -17,8 +17,8 @@ def get_visit_schedule(
     extend: bool | None = None,
 ) -> VisitSchedule:
     crfs = CrfCollection(
-        Crf(show_order=10, model="tests.crfone", required=True),
-        Crf(show_order=20, model="tests.crfeight", required=True),
+        Crf(show_order=10, model="clinicedc_tests.crfone", required=True),
+        Crf(show_order=20, model="clinicedc_tests.crfeight", required=True),
     )
 
     visit = Visit(
@@ -93,8 +93,8 @@ def get_visit_schedule(
 
     schedule = Schedule(
         name="schedule1",
-        onschedule_model="tests.onscheduleone",
-        offschedule_model="tests.offscheduleone",
+        onschedule_model="clinicedc_tests.onscheduleone",
+        offschedule_model="clinicedc_tests.offscheduleone",
         appointment_model="edc_appointment.appointment",
         consent_definitions=consent_definition,
     )
@@ -102,7 +102,7 @@ def get_visit_schedule(
     visit_schedule = VisitSchedule(
         name="visit_schedule",
         offstudy_model="edc_offstudy.subjectoffstudy",
-        death_report_model="tests.deathreport",
+        death_report_model="clinicedc_tests.deathreport",
         locator_model="edc_locator.subjectlocator",
     )
 

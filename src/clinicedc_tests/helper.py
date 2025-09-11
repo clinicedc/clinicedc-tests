@@ -8,18 +8,18 @@ from dateutil.relativedelta import relativedelta
 from django.apps import apps as django_apps
 from django.conf import settings
 from django.db import transaction
-from faker import Faker
-
 from edc_appointment.creators import UnscheduledAppointmentCreator
 from edc_appointment.models import Appointment
 from edc_consent.consent_definition import ConsentDefinition
-from edc_constants.constants import FEMALE, NO, SUBJECT, YES
+from edc_constants.constants import BLACK, FEMALE, NO, SUBJECT, YES
 from edc_utils import get_utcnow
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from edc_visit_tracking.constants import SCHEDULED
 from edc_visit_tracking.models import SubjectVisit
-from tests.consents import consent_v1
-from tests.models import Alphabet, CrfFive, CrfFour, CrfSix, CrfThree, CrfWithInline2
+
+from faker import Faker
+from .consents import consent_v1
+from .models import Alphabet, CrfFive, CrfFour, CrfSix, CrfThree, CrfWithInline2
 
 fake = Faker()
 
@@ -37,7 +37,7 @@ class Helper:
         try:
             return django_apps.get_model(settings.SUBJECT_SCREENING_MODEL)
         except LookupError:
-            return django_apps.get_model("tests.subjectscreening")
+            return django_apps.get_model("clinicedc_tests.subjectscreening")
 
     def consent_and_put_on_schedule(
         self,
@@ -47,6 +47,7 @@ class Helper:
         age_in_years: int | None = None,
         report_datetime: datetime | None = None,
         gender: str = None,
+        ethnicity: str = None,
         dob: date | None = None,
         guardian_name: str | None = None,
         is_literate: str | None = None,
@@ -55,6 +56,7 @@ class Helper:
         onschedule_datetime: datetime | None = None,
     ):
 
+        ethnicity = ethnicity or BLACK
         if dob:
             age_in_years = get_utcnow().year - dob.year
         if not consent_definition:
@@ -64,6 +66,7 @@ class Helper:
             age_in_years=age_in_years,
             gender=gender,
             alive=alive,
+            ethnicity=ethnicity
         )
 
         subject_consent = self.consent_subject(
@@ -90,8 +93,10 @@ class Helper:
         age_in_years: int | None = None,
         report_datetime: datetime | None = None,
         alive: str | None = None,
+        ethnicity: str = None,
     ):
         gender = gender or FEMALE
+        ethnicity = ethnicity or BLACK
         age_in_years = age_in_years or 25
         report_datetime = report_datetime or self.now
         last_name = fake.last_name().replace(" ", "").upper()
@@ -113,6 +118,7 @@ class Helper:
             initials=initials,
             gender=gender,
             alive=alive,
+            ethnicity=ethnicity,
         )
         subject_screening.eligible = True
         subject_screening.eligible_datetime = subject_screening.report_datetime
@@ -147,6 +153,7 @@ class Helper:
                 confirm_identity=identity,
                 identity_type="country_id" if identity_type is None else identity_type,
                 gender=subject_screening.gender,
+                ethnicity=subject_screening.ethnicity,
                 first_name=first_name,
                 last_name=last_name,
                 initials=subject_screening.initials,

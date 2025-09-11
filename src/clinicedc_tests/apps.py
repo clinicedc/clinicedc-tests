@@ -2,6 +2,6 @@ from django.apps import AppConfig as DjangoAppConfig
 
 
 class AppConfig(DjangoAppConfig):
-    name = "tests"
-    verbose_name = "tests"
-    app_label = "tests"
+    name = "clinicedc_tests"
+    verbose_name = "clinicedc_tests"
+    app_label = "clinicedc_tests"

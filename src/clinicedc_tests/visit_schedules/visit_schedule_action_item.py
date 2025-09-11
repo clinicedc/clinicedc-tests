@@ -5,8 +5,8 @@ from edc_visit_schedule.visit import Crf, CrfCollection, Visit
 from edc_visit_schedule.visit_schedule import VisitSchedule
 
 crfs = CrfCollection(
-    Crf(show_order=1, model="tests.crflongitudinalone", required=True),
-    Crf(show_order=2, model="tests.crflongitudinaltwo", required=True),
+    Crf(show_order=1, model="clinicedc_tests.crflongitudinalone", required=True),
+    Crf(show_order=2, model="clinicedc_tests.crflongitudinaltwo", required=True),
 )
 
 visit0 = Visit(
@@ -42,7 +42,7 @@ def get_visit_schedule(cdef):
     schedule_action_item = Schedule(
         name="schedule_action_item",
         onschedule_model="edc_visit_schedule.onschedule",
-        offschedule_model="tests.offschedule",
+        offschedule_model="clinicedc_tests.offschedule",
         consent_definitions=[cdef],
         appointment_model="edc_appointment.appointment",
     )

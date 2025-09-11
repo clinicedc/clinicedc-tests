@@ -5,7 +5,6 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Manager
 from django.db.models.deletion import CASCADE, PROTECT
-
 from django_crypto_fields.fields import EncryptedCharField
 from edc_action_item.models import ActionModelMixin
 from edc_adherence.model_mixins import MedicationAdherenceModelMixin
@@ -36,12 +35,9 @@ from edc_consent.model_mixins import (
 )
 from edc_constants.choices import YES_NO, YES_NO_NA
 from edc_constants.constants import YES
-from edc_crf.model_mixins import (
-    CrfInlineModelMixin,
-    CrfModelMixin,
-    CrfStatusModelMixin,
-    CrfWithActionModelMixin,
-)
+from edc_crf.model_mixins import CrfInlineModelMixin, CrfModelMixin, CrfStatusModelMixin, \
+    CrfStatusModelMixin, CrfWithActionModelMixin
+from edc_egfr.model_mixins import EgfrDropNotificationModelMixin, EgfrModelMixin
 from edc_export.managers import ExportHistoryManager
 from edc_export.model_mixins import ExportTrackingFieldsModelMixin
 from edc_identifier.managers import SubjectIdentifierManager
@@ -50,20 +46,14 @@ from edc_identifier.model_mixins import (
     NonUniqueSubjectIdentifierModelMixin,
 )
 from edc_lab.model_mixins import CrfWithRequisitionModelMixin, RequisitionModelMixin
-from edc_lab_panel.panels import fbc_panel
+from edc_lab_panel.panels import fbc_panel, rft_panel
 from edc_lab_results import BLOOD_RESULTS_FBC_ACTION
-from edc_lab_results.model_mixins import (
-    BloodResultsModelMixin,
-    HaemoglobinModelMixin,
-    Hba1cModelMixin,
-    HctModelMixin,
-    PlateletsModelMixin,
-    RbcModelMixin,
-    WbcModelMixin,
-)
+from edc_lab_results.model_mixins import BloodResultsMethodsModelMixin, BloodResultsModelMixin, \
+    HaemoglobinModelMixin, Hba1cModelMixin, HctModelMixin, PlateletsModelMixin, RbcModelMixin, \
+    WbcModelMixin
 from edc_list_data.model_mixins import BaseListModelMixin, ListModelMixin
 from edc_model import models as edc_models
-from edc_model.models import BaseUuidModel, HistoricalRecords
+from edc_model.models import BaseUuidModel, BaseUuidModel, HistoricalRecords
 from edc_model.validators import date_not_future, datetime_not_future
 from edc_offstudy.model_mixins import OffstudyModelMixin
 from edc_pharmacy.model_mixins import StudyMedicationCrfModelMixin
@@ -73,12 +63,12 @@ from edc_protocol.validators import (
 )
 from edc_randomization.model_mixins import RandomizationListModelMixin
 from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
-from edc_reportable import GRAMS_PER_DECILITER
+from edc_reportable import GRAMS_PER_DECILITER, MICROMOLES_PER_LITER
 from edc_reportable.choices import REPORTABLE
 from edc_screening.model_mixins import EligibilityModelMixin, ScreeningModelMixin
 from edc_screening.screening_eligibility import ScreeningEligibility
 from edc_sites.managers import CurrentSiteManager
-from edc_sites.model_mixins import SiteModelMixin
+from edc_sites.model_mixins import SiteModelMixin, SiteModelMixin
 from edc_utils import get_utcnow
 from edc_visit_schedule.constants import OFFSCHEDULE_ACTION
 from edc_visit_schedule.model_mixins import (
@@ -88,7 +78,8 @@ from edc_visit_schedule.model_mixins import (
 )
 from edc_visit_schedule.models import VisitSchedule
 from edc_visit_tracking.model_mixins import VisitTrackingCrfModelMixin
-from edc_visit_tracking.models import SubjectVisit
+from edc_visit_tracking.models import SubjectVisit, SubjectVisit
+
 from .eligibility import MyScreeningEligibility
 
 __all__ = [
@@ -164,6 +155,9 @@ class SubjectScreening(ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel
     alive = models.CharField(max_length=10, default=YES)
 
     def get_consent_definition(self):
+        pass
+
+    class Meta(ScreeningModelMixin.Meta,BaseUuidModel.Meta):
         pass
 
 
@@ -1380,3 +1374,51 @@ class BloodResultsHba1c(
     class Meta(edc_models.BaseUuidModel.Meta):
         verbose_name = "HbA1c"
         verbose_name_plural = "HbA1c"
+
+class ResultCrf(BloodResultsMethodsModelMixin, EgfrModelMixin, models.Model):
+    lab_panel = rft_panel
+
+    egfr_formula_name = "ckd-epi"
+
+    subject_visit = models.ForeignKey(SubjectVisit, on_delete=models.PROTECT)
+
+    requisition = models.ForeignKey(SubjectRequisition, on_delete=models.PROTECT)
+
+    report_datetime = models.DateTimeField(
+        verbose_name="Report Date and Time",
+        default=get_utcnow,
+        help_text="Date and time of report.",
+    )
+
+    assay_datetime = models.DateTimeField(default=get_utcnow())
+
+    creatinine_value = models.DecimalField(
+        decimal_places=2, max_digits=6, null=True, blank=True
+    )
+
+    creatinine_units = models.CharField(
+        verbose_name="units",
+        max_length=10,
+        choices=((MICROMOLES_PER_LITER, MICROMOLES_PER_LITER),),
+        null=True,
+        blank=True,
+    )
+
+    @property
+    def related_visit(self):
+        return self.subject_visit
+
+
+class EgfrDropNotification(
+    SiteModelMixin, CrfStatusModelMixin, EgfrDropNotificationModelMixin, BaseUuidModel
+):
+    subject_visit = models.ForeignKey(SubjectVisit, on_delete=models.PROTECT)
+
+    report_datetime = models.DateTimeField(
+        verbose_name="Report Date and Time", default=get_utcnow
+    )
+
+    consent_version = models.CharField(max_length=5, default="1")
+
+    class Meta(EgfrDropNotificationModelMixin.Meta, BaseUuidModel.Meta):
+        pass

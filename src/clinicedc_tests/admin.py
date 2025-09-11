@@ -14,7 +14,7 @@ from edc_model_admin.mixins import (
     TemplatesModelAdminMixin,
 )
 from edc_visit_tracking.modeladmin_mixins import CrfModelAdminMixin
-from .admin_site import test_app_admin
+from .admin_site import clinicedc_tests_admin
 from .form_labels import MyCustomLabelCondition
 from .forms import TestModel3Form
 from .models import (
@@ -138,7 +138,7 @@ class BaseModelAdmin(TemplatesModelAdminMixin):
     search_fields = ("subject_identifier",)
 
 
-@admin.register(CrfOne, site=test_app_admin)
+@admin.register(CrfOne, site=clinicedc_tests_admin)
 class CrfOneAdmin(BaseModelAdmin, admin.ModelAdmin):
     pass
 
@@ -146,25 +146,25 @@ class CrfOneAdmin(BaseModelAdmin, admin.ModelAdmin):
 # using ModelAdminNextUrlRedirectMixin
 
 
-@admin.register(RedirectNextModel, site=test_app_admin)
+@admin.register(RedirectNextModel, site=clinicedc_tests_admin)
 class RedirectNextModelAdmin(
     BaseModelAdmin, ModelAdminNextUrlRedirectMixin, admin.ModelAdmin
 ):
     pass
 
 
-@admin.register(CrfTwo, site=test_app_admin)
+@admin.register(CrfTwo, site=clinicedc_tests_admin)
 class CrfTwoAdmin(BaseModelAdmin, ModelAdminNextUrlRedirectMixin, admin.ModelAdmin):
     show_save_next = True
     show_cancel = True
 
 
-@admin.register(CrfThree, site=test_app_admin)
+@admin.register(CrfThree, site=clinicedc_tests_admin)
 class CrfThreeAdmin(BaseModelAdmin, ModelAdminNextUrlRedirectMixin, admin.ModelAdmin):
     pass
 
 
-@admin.register(SubjectRequisition, site=test_app_admin)
+@admin.register(SubjectRequisition, site=clinicedc_tests_admin)
 class SubjectRequisitionAdmin(
     BaseModelAdmin, ModelAdminNextUrlRedirectMixin, admin.ModelAdmin
 ):
@@ -175,7 +175,7 @@ class SubjectRequisitionAdmin(
 # using ModelAdminRedirectOnDeleteMixin
 
 
-@admin.register(CrfFour, site=test_app_admin)
+@admin.register(CrfFour, site=clinicedc_tests_admin)
 class CrfFourAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
     post_url_on_delete_name = "dashboard_url"
 
@@ -183,7 +183,7 @@ class CrfFourAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelA
         return {"subject_identifier": obj.subject_identifier}
 
 
-@admin.register(CrfFive, site=test_app_admin)
+@admin.register(CrfFive, site=clinicedc_tests_admin)
 class CrfFiveAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
     post_url_on_delete_name = "dashboard2_url"
 
@@ -191,7 +191,7 @@ class CrfFiveAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelA
         return {"subject_identifier": obj.subject_identifier}
 
 
-@admin.register(CrfSix, site=test_app_admin)
+@admin.register(CrfSix, site=clinicedc_tests_admin)
 class CrfSixAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
     post_url_on_delete_name = None
 
@@ -205,7 +205,7 @@ class CrfSevenForm(CrfModelFormMixin, forms.ModelForm):
         model = CrfSeven
 
 
-@admin.register(CrfSeven, site=test_app_admin)
+@admin.register(CrfSeven, site=clinicedc_tests_admin)
 class CrfSevenAdmin(ModelAdminCrfDashboardMixin, admin.ModelAdmin):
     show_save_next = True
     show_cancel = False
