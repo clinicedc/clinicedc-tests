@@ -569,6 +569,7 @@ requires-dist = [
 develop = [
     { name = "argon2-cffi" },
     { name = "clinicedc", editable = "../clinicedc/clinicedc" },
+    { name = "clinicedc-tests", editable = "." },
     { name = "django-admin-rangefilter" },
     { name = "django-audit-fields", editable = "../django-audit-fields" },
     { name = "django-crypto-fields", editable = "../django-crypto-fields" },
@@ -617,8 +618,6 @@ test = [
     { name = "coverage", specifier = ">=7.10.1" },
     { name = "django-audit-fields", editable = "../django-audit-fields" },
     { name = "django-webtest", specifier = ">=1.9.13" },
-    { name = "edc-test-settings", editable = "../edc-test-settings" },
-    { name = "edc-test-utils", editable = "../edc-test-utils" },
     { name = "faker", specifier = ">=37.4.2" },
     { name = "model-bakery", specifier = ">=1.20.5" },
     { name = "time-machine", specifier = ">=2.16.0" },
@@ -627,7 +626,7 @@ test = [
 
 [[package]]
 name = "clinicedc-tests"
-version = "0.1.4"
+version = "0.1.5"
 source = { editable = "." }
 dependencies = [
     { name = "faker" },
