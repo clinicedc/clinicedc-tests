@@ -569,6 +569,7 @@ requires-dist = [
 develop = [
     { name = "argon2-cffi" },
     { name = "clinicedc", editable = "../clinicedc/clinicedc" },
+    { name = "clinicedc-tests", editable = "." },
     { name = "django-admin-rangefilter" },
     { name = "django-audit-fields", editable = "../django-audit-fields" },
     { name = "django-crypto-fields", editable = "../django-crypto-fields" },

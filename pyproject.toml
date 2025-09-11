@@ -117,5 +117,3 @@ django-audit-fields = { path = "../django-audit-fields", editable = true }
 django-crypto-fields = { path = "../django-crypto-fields", editable = true }
 django-revision = { path = "../django-revision", editable = true }
 django-multisite2 = { path = "../django-multisite2", editable = true }
-edc-test-settings = { path = "../edc-test-settings", editable = true }
-edc-test-utils = { path = "../edc-test-utils", editable = true }
