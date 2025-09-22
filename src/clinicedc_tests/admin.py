@@ -16,7 +16,7 @@ from edc_visit_tracking.modeladmin_mixins import CrfModelAdminMixin
 
 from .admin_site import clinicedc_tests_admin
 from .form_labels import MyCustomLabelCondition
-from .forms import TestModel3Form
+from .forms import MemberForm, TeamForm, TeamWithDifferentFieldsForm, TestModel3Form
 from .models import (
     CrfFive,
     CrfFour,
@@ -25,12 +25,16 @@ from .models import (
     CrfSix,
     CrfThree,
     CrfTwo,
+    Member,
     RedirectNextModel,
     SubjectRequisition,
+    Team,
+    TeamWithDifferentFields,
     TestModel3,
     TestModel4,
     TestModel5,
     TestModel6,
+    Venue,
 )
 
 visit_two_fieldset = Fieldset(
@@ -210,3 +214,57 @@ class CrfSevenAdmin(ModelAdminCrfDashboardMixin, admin.ModelAdmin):
     show_cancel = False
 
     form = CrfSevenForm
+
+
+# edc_form_runners
+class MemberInlineAdmin(admin.TabularInline):
+    model = Member
+    form = MemberForm
+
+    extra = 0
+
+
+@admin.register(Venue, site=clinicedc_tests_admin)
+class VenueAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
+    post_url_on_delete_name = "dashboard_url"
+
+    def post_url_on_delete_kwargs(self, request, obj):
+        return {"subject_identifier": obj.subject_identifier}
+
+
+@admin.register(Team, site=clinicedc_tests_admin)
+class TeamAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
+    post_url_on_delete_name = "dashboard_url"
+
+    form = TeamForm
+    inlines = [MemberInlineAdmin]
+    fieldsets = ((None, ({"fields": ("name", "created", "modified")})),)
+
+    def post_url_on_delete_kwargs(self, request, obj):
+        return {"subject_identifier": obj.subject_identifier}
+
+
+@admin.register(TeamWithDifferentFields, site=clinicedc_tests_admin)
+class TeamWithDifferentFieldsAdmin(
+    BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin
+):
+    post_url_on_delete_name = "dashboard_url"
+
+    form = TeamWithDifferentFieldsForm
+
+    # do not include "name" to show that the field is ignored
+    # by FormRunner.run even though blank=False
+    fieldsets = ((None, ({"fields": ("size", "color", "mood")})),)
+
+    def post_url_on_delete_kwargs(self, request, obj):
+        return {"subject_identifier": obj.subject_identifier}
+
+
+@admin.register(Member, site=clinicedc_tests_admin)
+class MemberAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
+    post_url_on_delete_name = "dashboard_url"
+
+    form = MemberForm
+
+    def post_url_on_delete_kwargs(self, request, obj):
+        return {"subject_identifier": obj.subject_identifier}

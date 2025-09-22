@@ -16,11 +16,7 @@ style = color_style()
 if TYPE_CHECKING:
     from django.contrib.auth.models import User
 
-__all__ = [
-    "get_webtest_form",
-    "get_or_create_group",
-    "login",
-]
+__all__ = ["get_webtest_form", "get_or_create_group", "login"]
 
 
 def get_webtest_form(response):

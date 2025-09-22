@@ -5,7 +5,10 @@ from edc_visit_schedule.visit_schedule import VisitSchedule
 
 from clinicedc_tests.consents import consent_v1
 
-crfs = CrfCollection(Crf(show_order=1, model="clinicedc_tests.crffour", required=True))
+crfs = CrfCollection(
+    Crf(show_order=10, model="clinicedc_tests.crfthree", required=True),
+    Crf(show_order=20, model="clinicedc_tests.crffour", required=True),
+)
 
 visit0 = Visit(
     code="1000",

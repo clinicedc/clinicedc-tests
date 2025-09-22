@@ -5,6 +5,7 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Manager
 from django.db.models.deletion import CASCADE, PROTECT
+from django.utils import timezone
 from django_crypto_fields.fields import EncryptedCharField
 from edc_action_item.models import ActionModelMixin
 from edc_adherence.model_mixins import MedicationAdherenceModelMixin
@@ -78,9 +79,9 @@ from edc_reportable import GRAMS_PER_DECILITER, MICROMOLES_PER_LITER
 from edc_reportable.choices import REPORTABLE
 from edc_screening.model_mixins import EligibilityModelMixin, ScreeningModelMixin
 from edc_screening.screening_eligibility import ScreeningEligibility
+from edc_search.model_mixins import SearchSlugManager, SearchSlugModelMixin
 from edc_sites.managers import CurrentSiteManager
 from edc_sites.model_mixins import SiteModelMixin
-from edc_utils import get_utcnow
 from edc_visit_schedule.constants import OFFSCHEDULE_ACTION
 from edc_visit_schedule.model_mixins import (
     OffScheduleModelMixin,
@@ -159,7 +160,6 @@ __all__ = [
 
 
 class SubjectScreening(ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel):
-
     eligibility_cls = ScreeningEligibility
 
     thing = models.CharField(max_length=10, null=True)
@@ -191,7 +191,6 @@ class SubjectScreeningSimple(ScreeningModelMixin, EligibilityModelMixin, BaseUui
 class SubjectScreeningWithoutEligibility(
     ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel
 ):
-
     def get_consent_definition(self):
         pass
 
@@ -208,7 +207,6 @@ class SubjectConsent(
     VulnerabilityFieldsMixin,
     BaseUuidModel,
 ):
-
     history = HistoricalRecords()
 
     class Meta(ConsentModelMixin.Meta):
@@ -218,13 +216,13 @@ class SubjectConsent(
 class SubjectConsentV1(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
 
 
 class SubjectConsentV1Ext(ConsentExtensionModelMixin, SiteModelMixin, BaseUuidModel):
-
     subject_consent = models.ForeignKey(SubjectConsentV1, on_delete=models.PROTECT)
 
     on_site = CurrentSiteManager()
@@ -239,6 +237,7 @@ class SubjectConsentV1Ext(ConsentExtensionModelMixin, SiteModelMixin, BaseUuidMo
 class SubjectConsentUgV1(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -247,6 +246,7 @@ class SubjectConsentUgV1(SubjectConsent):
 class SubjectConsentV2(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -255,6 +255,7 @@ class SubjectConsentV2(SubjectConsent):
 class SubjectConsentV3(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -263,6 +264,7 @@ class SubjectConsentV3(SubjectConsent):
 class SubjectConsentV4(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -271,6 +273,7 @@ class SubjectConsentV4(SubjectConsent):
 class SubjectConsentV5(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -279,6 +282,7 @@ class SubjectConsentV5(SubjectConsent):
 class SubjectConsentV6(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -287,6 +291,7 @@ class SubjectConsentV6(SubjectConsent):
 class SubjectConsentV7(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -300,6 +305,7 @@ class SubjectConsentUpdateToV3(SubjectConsent):
 class SubjectConsent2V1(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -308,6 +314,7 @@ class SubjectConsent2V1(SubjectConsent):
 class SubjectConsent2V2(SubjectConsent):
     on_site = CurrentSiteByCdefManager()
     objects = ConsentObjectsByCdefManager()
+    history = HistoricalRecords()
 
     class Meta:
         proxy = True
@@ -375,7 +382,7 @@ class SubjectVisitWithoutAppointment(
     BaseUuidModel,
 ):
     subject_identifier = models.CharField(max_length=25)
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
         pass
@@ -465,7 +472,7 @@ class OffScheduleFive(SiteModelMixin, OffScheduleModelMixin, BaseUuidModel):
     my_offschedule_datetime = models.DateTimeField(
         verbose_name="Date and time subject taken off schedule",
         validators=[datetime_not_before_study_start, datetime_not_future],
-        default=get_utcnow,
+        default=timezone.now,
     )
 
 
@@ -479,7 +486,7 @@ class OffScheduleSix(SiteModelMixin, OffScheduleModelMixin, BaseUuidModel):
     my_offschedule_date = models.DateField(
         verbose_name="Date subject taken off schedule",
         validators=[date_not_before_study_start, date_not_future],
-        default=get_utcnow,
+        default=timezone.now,
     )
 
 
@@ -631,13 +638,13 @@ class ListModel(ListModelMixin):
 class ListOne(BaseListModelMixin, BaseUuidModel):
     char1 = models.CharField(max_length=25, null=True)
 
-    dte = models.DateTimeField(default=get_utcnow)
+    dte = models.DateTimeField(default=timezone.now)
 
 
 class ListTwo(BaseListModelMixin, BaseUuidModel):
     char1 = models.CharField(max_length=25, null=True)
 
-    dte = models.DateTimeField(default=get_utcnow)
+    dte = models.DateTimeField(default=timezone.now)
 
 
 class CrfEncrypted(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel):
@@ -671,7 +678,7 @@ class CrfOne(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidMode
         related_name="edc_action_item_test_visit_one",
     )
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     action_name = "submit-crf-one"
 
@@ -695,6 +702,8 @@ class CrfTwo(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidMode
         related_name="edc_action_item_test_visit_two",
     )
 
+    report_datetime = models.DateTimeField(default=timezone.now)
+
     action_name = "submit-crf-two"
 
     @property
@@ -713,7 +722,7 @@ class CrfTwo(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidMode
 class CrfThree(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -729,11 +738,13 @@ class CrfThree(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
 
     appt_date = models.DateField(null=True, blank=True)
 
+    m2m = models.ManyToManyField(ListModel)
+
 
 class CrfFour(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -745,7 +756,7 @@ class CrfFour(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
 class CrfFive(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -757,7 +768,7 @@ class CrfFive(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
 class CrfSix(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -773,7 +784,7 @@ class CrfSix(CrfModelMixin, BaseUuidModel):
 class CrfSeven(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -791,7 +802,7 @@ class CrfEight(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
 
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -836,7 +847,7 @@ class CrfWithInline(CrfModelMixin, BaseUuidModel):
 
     char1 = models.CharField(max_length=25, null=True)
 
-    dte = models.DateTimeField(default=get_utcnow)
+    dte = models.DateTimeField(default=timezone.now)
 
 
 class CrfWithInline2(BaseUuidModel):
@@ -844,7 +855,7 @@ class CrfWithInline2(BaseUuidModel):
 
     crf_two = models.ForeignKey(CrfTwo, on_delete=models.PROTECT)
 
-    dte = models.DateTimeField(default=get_utcnow)
+    dte = models.DateTimeField(default=timezone.now)
 
 
 class CrfOneInline(CrfInlineModelMixin, BaseUuidModel):
@@ -924,7 +935,6 @@ class CrfLongitudinalTwo(
 
 # edc-adherence
 class MedicationAdherence(MedicationAdherenceModelMixin, CrfModelMixin, BaseUuidModel):
-
     missed_pill_reason = models.ManyToManyField(
         "edc_adherence.NonAdherenceReasons",
         verbose_name="Reasons for missing study pills",
@@ -1012,7 +1022,7 @@ class AuditorModel(models.Model):
 
 class TestModel(BaseUuidModel):
     name = models.CharField(verbose_name="What is your name?", max_length=50, null=True)
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
         verbose_name = "Test Model"
@@ -1020,7 +1030,7 @@ class TestModel(BaseUuidModel):
 
 class TestModel2(BaseUuidModel):
     name = models.CharField(verbose_name="What is your name?", max_length=50, null=True)
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
         verbose_name = "Test Model2"
@@ -1028,15 +1038,14 @@ class TestModel2(BaseUuidModel):
 
 class TestModelPermissions(BaseUuidModel):
     name = models.CharField(max_length=50, null=True)
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
         verbose_name = "Test Model Permissions"
 
 
 class TestModel3(CrfModelMixin, BaseUuidModel):
-
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(
         verbose_name="Is it what it is?", max_length=10, choices=YES_NO
@@ -1069,10 +1078,13 @@ class TestModel3(CrfModelMixin, BaseUuidModel):
         verbose_name="summary_two", max_length=10, null=True, blank=True
     )
 
+    class Meta(CrfModelMixin.Meta, BaseUuidModel.Meta):
+        verbose_name = "Test Model3"
+        verbose_name_plural = "Test Model3"
+
 
 class TestModel4(CrfModelMixin, BaseUuidModel):
-
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(
         verbose_name="Is it what it is?", max_length=10, choices=YES_NO
@@ -1109,7 +1121,7 @@ class TestModel4(CrfModelMixin, BaseUuidModel):
 class TestModel5(CrfModelMixin, BaseUuidModel):
     subject_visit = models.OneToOneField(SubjectVisit, on_delete=PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     circumcised = models.CharField(
         verbose_name="Are you circumcised?", max_length=10, choices=YES_NO
@@ -1142,7 +1154,7 @@ class CustomRandomizationList(RandomizationListModelMixin, BaseUuidModel):
 class Prn(SiteModelMixin, BaseUuidModel):
     subject_identifier = models.CharField(max_length=50, null=True, blank=True)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -1157,7 +1169,7 @@ class Prn(SiteModelMixin, BaseUuidModel):
 class PrnOne(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT, related_name="+")
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -1165,7 +1177,7 @@ class PrnOne(CrfModelMixin, BaseUuidModel):
 class PrnTwo(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT, related_name="+")
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
@@ -1173,13 +1185,12 @@ class PrnTwo(CrfModelMixin, BaseUuidModel):
 class PrnThree(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT, related_name="+")
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     f1 = models.CharField(max_length=50, null=True, blank=True)
 
 
 class Team(CrfModelMixin, BaseUuidModel):
-
     name = models.CharField(max_length=36, default=uuid4)
 
     class Meta(CrfModelMixin.Meta, BaseUuidModel.Meta):
@@ -1188,7 +1199,6 @@ class Team(CrfModelMixin, BaseUuidModel):
 
 
 class Venue(CrfModelMixin, BaseUuidModel):
-
     name = models.CharField(max_length=36, default=uuid4)
 
     class Meta(CrfModelMixin.Meta, BaseUuidModel.Meta):
@@ -1197,7 +1207,6 @@ class Venue(CrfModelMixin, BaseUuidModel):
 
 
 class Member(SiteModelMixin, BaseUuidModel):
-
     team = models.ForeignKey(Team, on_delete=PROTECT)
 
     player_name = models.CharField(max_length=36, default=uuid4)
@@ -1222,7 +1231,6 @@ class Member(SiteModelMixin, BaseUuidModel):
 
 
 class TeamWithDifferentFields(CrfModelMixin, BaseUuidModel):
-
     size = models.IntegerField()
 
     name = models.CharField(max_length=36, null=True, blank=False)
@@ -1287,7 +1295,7 @@ class CrfMissingManager(BaseUuidModel):
 class SpecimenResult(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=CASCADE)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     haemoglobin = models.DecimalField(
         decimal_places=1, max_digits=6, null=True, blank=True
@@ -1342,7 +1350,7 @@ class StudyMedication(
 ):
     subject_visit = models.OneToOneField(SubjectVisit, on_delete=models.PROTECT)
 
-    report_datetime = models.DateTimeField(default=get_utcnow)
+    report_datetime = models.DateTimeField(default=timezone.now)
 
     def run_metadata_rules_for_related_visit(self, **kwargs):
         pass
@@ -1383,7 +1391,7 @@ class BloodResultsFbc(
         verbose_name_plural = "Blood Results: FBC"
 
 
-# this model does not include the requisition and action item mixins
+# this model does not include the action item mixin
 class BloodResultsHba1c(
     CrfModelMixin,
     CrfWithRequisitionModelMixin,
@@ -1407,11 +1415,11 @@ class ResultCrf(BloodResultsMethodsModelMixin, EgfrModelMixin, models.Model):
 
     report_datetime = models.DateTimeField(
         verbose_name="Report Date and Time",
-        default=get_utcnow,
+        default=timezone.now,
         help_text="Date and time of report.",
     )
 
-    assay_datetime = models.DateTimeField(default=get_utcnow())
+    assay_datetime = models.DateTimeField(default=timezone.now)
 
     creatinine_value = models.DecimalField(
         decimal_places=2, max_digits=6, null=True, blank=True
@@ -1436,10 +1444,64 @@ class EgfrDropNotification(
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=models.PROTECT)
 
     report_datetime = models.DateTimeField(
-        verbose_name="Report Date and Time", default=get_utcnow
+        verbose_name="Report Date and Time", default=timezone.now
     )
 
     consent_version = models.CharField(max_length=5, default="1")
 
     class Meta(EgfrDropNotificationModelMixin.Meta, BaseUuidModel.Meta):
         pass
+
+
+# edc_search
+
+
+class TestModelSlugMixin(SearchSlugModelMixin, models.Model):
+    f1 = models.CharField(max_length=25, default="")
+
+    f2 = models.DateTimeField(null=True)
+
+    f3 = models.IntegerField(null=True)
+
+    objects = SearchSlugManager()
+
+    @property
+    def attr(self):
+        return "attr"
+
+    @property
+    def dummy(self):
+        class Dummy:
+            attr = "dummy_attr"
+
+            def __str__(self):
+                return "Dummy"
+
+        return Dummy()
+
+    def get_search_slug_fields(self):
+        return "f1", "f2", "f3", "attr", "dummy", "dummy.attr"
+
+    class Meta:
+        abstract = True
+
+
+class TestModelSlug(TestModelSlugMixin, models.Model):
+    pass
+
+
+class TestModelSlugExtra(TestModelSlugMixin, models.Model):
+    f4 = models.CharField(max_length=25, default="")
+
+    def get_search_slug_fields(self):
+        fields = super().get_search_slug_fields()
+        return *fields, "f4"
+
+
+# edc_list_data
+
+
+class NonAdherenceReasons(ListModelMixin):
+    class Meta(ListModelMixin.Meta):
+        verbose_name = "Non-Adherence Reasons"
+        verbose_name_plural = "Non-Adherence Reasons"

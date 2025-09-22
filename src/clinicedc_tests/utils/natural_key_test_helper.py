@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from unittest.case import TestCase
 
 from django.apps import apps as django_apps

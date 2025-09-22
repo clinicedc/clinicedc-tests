@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-def get_installed_apps_for_tests(apps_to_test: list[str] | None = None):
+def get_installed_apps_for_tests(*apps_to_test: str):
     return [
         "django.contrib.admin",
         "django.contrib.auth",
@@ -10,11 +10,14 @@ def get_installed_apps_for_tests(apps_to_test: list[str] | None = None):
         "django.contrib.messages",
         "django.contrib.staticfiles",
         "django.contrib.sites",
-        "simple_history",
-        "multisite",
         "django_crypto_fields.apps.AppConfig",
         "django_pylabels.apps.AppConfig",
         "django_revision.apps.AppConfig",
+        "multisite",
+        "django_extensions",
+        "logentry_admin",
+        "simple_history",
+        "storages",
         "edc_action_item.apps.AppConfig",
         "edc_adherence.apps.AppConfig",
         "edc_adverse_event.apps.AppConfig",
@@ -79,6 +82,6 @@ def get_installed_apps_for_tests(apps_to_test: list[str] | None = None):
         "edc_visit_tracking.apps.AppConfig",
         "edc_vitals.apps.AppConfig",
         *apps_to_test,
-        "clinicedc_tests",
+        # "clinicedc_tests",
         "edc_appconfig.apps.AppConfig",
     ]

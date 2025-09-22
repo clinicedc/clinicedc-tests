@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-import uuid
+import random
+import string
 from datetime import date, datetime
 from uuid import uuid4
 
@@ -18,8 +19,10 @@ from edc_visit_tracking.constants import SCHEDULED
 from edc_visit_tracking.models import SubjectVisit
 from faker import Faker
 
+from clinicedc_tests.models import CrfTwo
+
 from .consents import consent_v1
-from .models import Alphabet, CrfFive, CrfFour, CrfSix, CrfThree, CrfWithInline2
+from .models import CrfFive, CrfFour, CrfOne, CrfSix, CrfThree, CrfWithInline2
 
 fake = Faker()
 
@@ -55,7 +58,6 @@ class Helper:
         alive: str | None = None,
         onschedule_datetime: datetime | None = None,
     ):
-
         ethnicity = ethnicity or BLACK
         if dob:
             age_in_years = get_utcnow().year - dob.year
@@ -101,7 +103,10 @@ class Helper:
         report_datetime = report_datetime or self.now
         last_name = fake.last_name().replace(" ", "").upper()
         first_name = fake.first_name().replace(" ", "").upper()
-        initials = f"{first_name[0]}{last_name[0]}".upper()
+        middle_initial = random.choice(string.ascii_uppercase)  # nosec B311
+        initials = (
+            f"{first_name[0]}{middle_initial}{last_name[0]}".upper()
+        )  # nosec B311
         alive = alive or YES
 
         while self.screening_model_cls.objects.filter(
@@ -184,7 +189,6 @@ class Helper:
         schedule.put_on_schedule(
             subject_consent.subject_identifier,
             onschedule_datetime or subject_consent.consent_datetime,
-            # consent_definition=subject_consent.consent_definition,
         )
         return None
 
@@ -205,41 +209,53 @@ class Helper:
         return creator.appointment
 
     @staticmethod
-    def create_crfs():
-        for i, appointment in enumerate(Appointment.objects.all()):
-            alphabet = Alphabet.objects.create(
-                display_name=f"display_name{i}", name=f"name{i}"
-            )
-            subject_visit = SubjectVisit.objects.create(
-                appointment=appointment, report_datetime=get_utcnow(), reason=SCHEDULED
-            )
-            CrfThree.objects.create(
-                subject_visit=subject_visit,
-                report_datetime=get_utcnow(),
-                f1=f"char{i}",
-                f4=i,
-                f5=uuid.uuid4(),
-            )
-            crf_one = CrfFour.objects.create(
-                subject_visit=subject_visit, report_datetime=get_utcnow()
-            )
-            CrfFive.objects.create(
-                subject_visit=subject_visit, report_datetime=get_utcnow()
-            )
-            CrfSix.objects.create(
-                subject_visit=subject_visit, report_datetime=get_utcnow()
-            )
-            CrfWithInline2.objects.create(
-                crf_one=crf_one, alphabet=alphabet, dte=get_utcnow()
-            )
+    def create_crfs(subject_visit):
+        # alphabet = Alphabet.objects.create(
+        #     display_name=f"display_name{i}", name=f"name{i}"
+        # )
+        crf_one = CrfOne.objects.create(
+            subject_visit=subject_visit,
+            report_datetime=subject_visit.report_datetime,
+        )
+        crf_two = CrfTwo.objects.create(
+            subject_visit=subject_visit,
+            report_datetime=subject_visit.report_datetime,
+        )
+        CrfThree.objects.create(
+            subject_visit=subject_visit,
+            report_datetime=subject_visit.report_datetime,
+            f1=uuid4().hex,
+            f4=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),  # nosec B311
+            f5=uuid4(),
+        )
+        CrfFour.objects.create(
+            subject_visit=subject_visit,
+            report_datetime=subject_visit.report_datetime,
+        )
+        CrfFive.objects.create(
+            subject_visit=subject_visit,
+            report_datetime=subject_visit.report_datetime,
+        )
+        CrfSix.objects.create(
+            subject_visit=subject_visit,
+            report_datetime=subject_visit.report_datetime,
+        )
+        CrfWithInline2.objects.create(
+            crf_one=crf_one,
+            crf_two=crf_two,
+            dte=subject_visit.report_datetime,
+        )
 
-    def enroll_to_baseline(self, **kwargs) -> SubjectVisit:
+    def enroll_to_baseline(
+        self, subject_visit_model_cls=None, **kwargs
+    ) -> SubjectVisit:
         """Enrolls with first appointment attended"""
+        subject_visit_model_cls = subject_visit_model_cls or SubjectVisit
         consent = self.consent_and_put_on_schedule(**kwargs)
         appointment = Appointment.objects.filter(
             subject_identifier=consent.subject_identifier
         ).order_by("appt_datetime")[0]
-        subject_visit = SubjectVisit.objects.create(
+        subject_visit = subject_visit_model_cls.objects.create(
             appointment=appointment,
             report_datetime=appointment.appt_datetime,
             reason=SCHEDULED,
