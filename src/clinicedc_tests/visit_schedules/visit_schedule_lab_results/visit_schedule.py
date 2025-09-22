@@ -81,3 +81,4 @@ def get_visit_schedule(cdef=None):
     )
 
     visit_schedule.add_schedule(schedule)
+    return visit_schedule

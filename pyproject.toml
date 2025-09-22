@@ -112,7 +112,7 @@ develop = [
 
 [tool.uv.sources]
 clinicedc-tests = { workspace = true }
-clinicedc = { path = "../clinicedc/clinicedc", editable = true }
+clinicedc = { path = "../clinicedc", editable = true }
 django-audit-fields = { path = "../django-audit-fields", editable = true }
 django-crypto-fields = { path = "../django-crypto-fields", editable = true }
 django-revision = { path = "../django-revision", editable = true }

@@ -34,6 +34,7 @@ def get_visit_schedule(
         Crf(show_order=6, model="clinicedc_tests.crfsix", required=True),
         Crf(show_order=7, model="clinicedc_tests.crfseven", required=True),
         Crf(show_order=8, model="clinicedc_tests.bloodresultsfbc", required=True),
+        Crf(show_order=9, model="clinicedc_tests.crfencrypted", required=True),
     )
 
     requisitions = requisitions or RequisitionCollection(

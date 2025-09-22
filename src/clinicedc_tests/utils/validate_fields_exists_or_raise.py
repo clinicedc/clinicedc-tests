@@ -1,4 +1,4 @@
-from typing import Any
+from __future__ import annotations
 
 __all__ = ["FieldDoesNotExistTestError", "validate_fields_exists_or_raise"]
 
@@ -7,7 +7,7 @@ class FieldDoesNotExistTestError(Exception):
     pass
 
 
-def validate_fields_exists_or_raise(cleaned_data: dict, model_cls: Any) -> None:
+def validate_fields_exists_or_raise(cleaned_data: dict, model_cls) -> None:
     if not_found := [
         key
         for key in cleaned_data

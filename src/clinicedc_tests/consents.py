@@ -52,7 +52,7 @@ consent1_v3 = ConsentDefinition(
 
 consent2_v1 = ConsentDefinition(
     "clinicedc_tests.subjectconsent2v1",
-    start=ResearchProtocolConfig().study_open_datetime,
+    start=ResearchProtocolConfig().study_open_datetime + relativedelta(days=31),
     end=ResearchProtocolConfig().study_close_datetime,
     gender=["M", "F"],
     version="2.1",
@@ -63,7 +63,7 @@ consent2_v1 = ConsentDefinition(
 
 consent2_v2 = ConsentDefinition(
     "clinicedc_tests.subjectconsent2v2",
-    start=ResearchProtocolConfig().study_open_datetime,
+    start=ResearchProtocolConfig().study_open_datetime + relativedelta(days=75),
     end=ResearchProtocolConfig().study_close_datetime,
     gender=["M", "F"],
     version="2.2",

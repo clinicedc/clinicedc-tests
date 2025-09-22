@@ -12,6 +12,9 @@ from edc_adverse_event.action_items import (
 )
 from edc_adverse_event.constants import AE_FOLLOWUP_ACTION, DEATH_REPORT_ACTION
 from edc_constants.constants import HIGH_PRIORITY, NO
+from edc_data_manager.action_items import DataQueryAction
+from edc_lab_results.action_items import BloodResultsFbcAction
+from edc_locator.action_items import SubjectLocatorAction
 from edc_pharmacy.action_items import PrescriptionAction
 from edc_visit_schedule.constants import OFFSCHEDULE_ACTION
 
@@ -208,6 +211,15 @@ def register_actions():
 
     # edc-pharmacy
     site_action_items.register(PrescriptionAction)
+
+    # edc_data_manager
+    site_action_items.register(DataQueryAction)
+
+    # edc_lab_results
+    site_action_items.register(BloodResultsFbcAction)
+
+    # edc-locator
+    site_action_items.register(SubjectLocatorAction)
 
 
 register_actions()
