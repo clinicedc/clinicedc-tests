@@ -34,8 +34,9 @@ classifiers = [
 ]
 license = "GPL-3.0-or-later"
 license-files = ["LICEN[CS]E*"]
-requires-python = ">=3.12"
+requires-python = ">=3.12,<3.14"
 dependencies = [
+    "clinicedc>=2.0.0",
     "faker>=37.4.2",
     "model-bakery>=1.20.5",
     "time-machine>=2.16.0",

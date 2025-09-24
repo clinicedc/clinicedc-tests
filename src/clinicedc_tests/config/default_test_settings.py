@@ -3,23 +3,18 @@ from __future__ import annotations
 import os
 import sys
 from datetime import datetime
+from importlib.resources import files
 from typing import List
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
+from multisite import SiteID
 
-try:
-    from multisite import SiteID
-except ModuleNotFoundError:
-    SiteID = None
-
-
-from importlib.resources import files
+__all__ = ["DefaultTestSettings"]
 
 
 class DisableMigrations(dict):
-
     def __contains__(self, item):
         return True
 

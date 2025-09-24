@@ -1,6 +1,6 @@
 from django.conf import settings
 from edc_lab import LabProfile, Process, bc, pl, site_labs
-from edc_lab_panel.panels import fbc_panel, lft_panel, rft_panel, vl_panel
+from edc_lab_panel.panels import fbc_panel, hba1c_panel, lft_panel, rft_panel, vl_panel
 
 lab_profile = LabProfile(
     name="lab_profile",
@@ -11,6 +11,7 @@ lab_profile = LabProfile(
 lab_profile.add_panel(fbc_panel)
 lab_profile.add_panel(lft_panel)
 lab_profile.add_panel(rft_panel)
+lab_profile.add_panel(hba1c_panel)
 
 vl_pl_process = Process(aliquot_type=pl, aliquot_count=4)
 vl_bc_process = Process(aliquot_type=bc, aliquot_count=2)
