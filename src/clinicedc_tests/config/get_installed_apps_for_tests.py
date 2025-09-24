@@ -82,6 +82,5 @@ def get_installed_apps_for_tests(*apps_to_test: str):
         "edc_visit_tracking.apps.AppConfig",
         "edc_vitals.apps.AppConfig",
         *apps_to_test,
-        # "clinicedc_tests",
         "edc_appconfig.apps.AppConfig",
     ]
