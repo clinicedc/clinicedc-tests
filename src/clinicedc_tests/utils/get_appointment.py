@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 
 from edc_appointment.constants import IN_PROGRESS_APPT
+from edc_appointment.creators import create_unscheduled_appointment
 from edc_appointment.utils import get_appointment_model_cls
 from edc_visit_tracking.constants import UNSCHEDULED
 
@@ -15,7 +16,6 @@ __all__ = ["get_appointment"]
 
 
 def get_appointment(
-    self,
     subject_identifier: str | None = None,
     visit_code: str | None = None,
     visit_code_sequence: int | None = None,
@@ -40,7 +40,7 @@ def get_appointment(
         appointment.save()
         appointment.refresh_from_db()
     if reason == UNSCHEDULED:
-        appointment = self.create_unscheduled_appointment(appointment)
+        appointment = create_unscheduled_appointment(appointment)
     appointment.appt_status = IN_PROGRESS_APPT
     appointment.save()
     appointment.refresh_from_db()
