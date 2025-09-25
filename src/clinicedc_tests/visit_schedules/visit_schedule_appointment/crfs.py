@@ -1,10 +1,11 @@
-from edc_visit_schedule.tests.dummy_panel import DummyPanel
 from edc_visit_schedule.visit import (
     Crf,
     CrfCollection,
     Requisition,
     RequisitionCollection,
 )
+
+from ..dummy_panel import DummyPanel
 
 
 class MockPanel(DummyPanel):

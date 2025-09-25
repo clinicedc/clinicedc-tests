@@ -1,13 +1,13 @@
 from dateutil.relativedelta import relativedelta
 from edc_visit_schedule.constants import DAY1, MONTH1, MONTH3, MONTH6, WEEK2
 from edc_visit_schedule.schedule import Schedule
-from edc_visit_schedule.tests import DummyPanel
 from edc_visit_schedule.visit import Crf, CrfCollection, Visit
 from edc_visit_schedule.visit_schedule import VisitSchedule
 
+from ..dummy_panel import DummyPanel
+
 
 def get_visit_schedule(cdef):
-
     app_label = "clinicedc_tests"
 
     class MockPanel(DummyPanel):
