@@ -1,6 +1,5 @@
 from dateutil.relativedelta import relativedelta
 from edc_visit_schedule.schedule import Schedule
-from edc_visit_schedule.tests import DummyPanel
 from edc_visit_schedule.visit import (
     Crf,
     CrfCollection,
@@ -10,6 +9,7 @@ from edc_visit_schedule.visit import (
 )
 from edc_visit_schedule.visit_schedule import VisitSchedule
 
+from ..dummy_panel import DummyPanel
 from .lab_profiles import panel_one, panel_two
 
 app_label = "clinicedc_tests"

@@ -1,6 +1,5 @@
 from dateutil.relativedelta import relativedelta
 from edc_visit_schedule.schedule import Schedule
-from edc_visit_schedule.tests.dummy_panel import DummyPanel
 from edc_visit_schedule.visit import (
     Crf,
     CrfCollection,
@@ -9,6 +8,8 @@ from edc_visit_schedule.visit import (
     Visit,
 )
 from edc_visit_schedule.visit_schedule import VisitSchedule
+
+from ..dummy_panel import DummyPanel
 
 
 class Panel(DummyPanel):

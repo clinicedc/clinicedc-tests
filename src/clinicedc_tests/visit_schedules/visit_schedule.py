@@ -16,15 +16,22 @@ from ..labs import vl_panel
 
 def get_visit_schedule(
     cdef: ConsentDefinition,
-    crfs: CrfCollection = None,
-    requisitions: RequisitionCollection = None,
-    visit_schedule_name: str = None,
-    schedule_name: str = None,
-    onschedule_model: str = None,
-    offschedule_model: str = None,
-    visit_count: int = None,
-    allow_unscheduled: bool = None,
+    crfs: CrfCollection | None = None,
+    requisitions: RequisitionCollection | None = None,
+    visit_schedule_name: str | None = None,
+    schedule_name: str | None = None,
+    onschedule_model: str | None = None,
+    offschedule_model: str | None = None,
+    visit_count: int | None = None,
+    allow_unscheduled: bool | None = None,
 ):
+    visit_schedule_name = visit_schedule_name or "visit_schedule"
+    schedule_name = schedule_name or "schedule"
+    onschedule_model = onschedule_model or "edc_visit_schedule.onschedule"
+    offschedule_model = offschedule_model or "clinicedc_tests.offschedule"
+    visit_count = visit_count or 2
+    allow_unscheduled = True if allow_unscheduled is None else allow_unscheduled
+
     crfs = crfs or CrfCollection(
         Crf(show_order=1, model="clinicedc_tests.crflongitudinalone", required=True),
         Crf(show_order=2, model="clinicedc_tests.crflongitudinaltwo", required=True),
@@ -43,12 +50,6 @@ def get_visit_schedule(
         Requisition(show_order=50, panel=rft_panel, required=True, additional=False),
         Requisition(show_order=60, panel=vl_panel, required=True, additional=False),
     )
-    visit_schedule_name = visit_schedule_name or "visit_schedule"
-    schedule_name = schedule_name or "schedule"
-    onschedule_model = onschedule_model or "edc_visit_schedule.onschedule"
-    offschedule_model = offschedule_model or "clinicedc_tests.offschedule"
-    visit_count = visit_count or 2
-    allow_unscheduled = True if allow_unscheduled is None else allow_unscheduled
 
     visits = []
     for index in range(0, visit_count):
