@@ -9,7 +9,7 @@ namespace = false
 
 [project]
 name = "clinicedc-tests"
-version = "0.1.10"
+version = "0.2.0"
 description = "Shared test config and utils for clinicedc projects and related apps"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 keywords = ["django", "clinicedc", "edc", "clinical trials", "research", "data management", "esource"]
