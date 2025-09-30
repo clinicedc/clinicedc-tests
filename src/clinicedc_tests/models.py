@@ -191,6 +191,8 @@ class SubjectScreeningSimple(ScreeningModelMixin, EligibilityModelMixin, BaseUui
 class SubjectScreeningWithoutEligibility(
     ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel
 ):
+    alive = models.CharField(max_length=10, choices=YES_NO, default=YES)
+
     def get_consent_definition(self):
         pass
 
