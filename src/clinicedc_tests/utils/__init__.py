@@ -9,16 +9,16 @@ from .validate_fields_exists_or_raise import validate_fields_exists_or_raise
 from .webtest import get_or_create_group, get_webtest_form, login
 
 __all__ = [
-    "get_appointment",
-    "get_user_for_tests",
-    "NaturalKeyTestHelperError",
     "NaturalKeyTestHelper",
-    "validate_fields_exists_or_raise",
-    "get_webtest_form",
-    "get_or_create_group",
-    "login",
+    "NaturalKeyTestHelperError",
     "create_related_visit",
+    "get_appointment",
+    "get_or_create_group",
     "get_request_object_for_tests",
-    "get_visit_codes",
     "get_timepoint_from_visit_code",
+    "get_user_for_tests",
+    "get_visit_codes",
+    "get_webtest_form",
+    "login",
+    "validate_fields_exists_or_raise",
 ]

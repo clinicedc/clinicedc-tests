@@ -5,7 +5,7 @@ from unittest.case import TestCase
 from django.apps import apps as django_apps
 from edc_list_data.model_mixins import ListModelMixin
 
-__all__ = ["NaturalKeyTestHelperError", "NaturalKeyTestHelper"]
+__all__ = ["NaturalKeyTestHelper", "NaturalKeyTestHelperError"]
 
 
 class NaturalKeyTestHelperError(Exception):
@@ -71,7 +71,7 @@ class NaturalKeyTestHelper(TestCase):
                 except TypeError as e:
                     raise NaturalKeyTestHelperError(
                         f"{e} See {obj._meta.label_lower}. Got {options}."
-                    )
+                    ) from e
 
     def nk_test_natural_key_by_schedule(self, visits=None, visit_attr=None):
         """A wrapper method for natural_keys that use

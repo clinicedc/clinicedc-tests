@@ -1,6 +1,6 @@
 from dateutil.relativedelta import relativedelta
 from edc_consent.consent_definition import ConsentDefinition
-from edc_lab_panel.panels import fbc_panel, lft_panel, rft_panel
+from edc_lab_panel.panels import fbc_panel, lft_panel, rft_panel, vl_panel
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.visit import (
     Crf,
@@ -10,8 +10,6 @@ from edc_visit_schedule.visit import (
     Visit,
 )
 from edc_visit_schedule.visit_schedule import VisitSchedule
-
-from ..labs import vl_panel
 
 
 def get_visit_schedule(
@@ -51,9 +49,19 @@ def get_visit_schedule(
         Requisition(show_order=60, panel=vl_panel, required=True, additional=False),
     )
 
+    crfs_unscheduled = CrfCollection(
+        Crf(show_order=801, model="clinicedc_tests.crfeight", required=True),
+        Crf(show_order=201, model="clinicedc_tests.crftwo", required=True),
+        Crf(show_order=101, model="clinicedc_tests.crfone", required=True),
+    )
+
+    crfs_missed = CrfCollection(
+        Crf(show_order=1000, model="edc_visit_tracking.subjectvisitmissed", required=True),
+    )
+
     visits = []
     for index in range(0, visit_count):
-        visits.append(
+        visits.append(  # noqa: PERF401
             Visit(
                 code=f"{index + 1}000",
                 title=f"Day {index + 1}",
@@ -63,6 +71,8 @@ def get_visit_schedule(
                 rupper=relativedelta(days=6),
                 requisitions=requisitions,
                 crfs=crfs,
+                crfs_unscheduled=crfs_unscheduled,
+                crfs_missed=crfs_missed,
                 allow_unscheduled=allow_unscheduled,
             )
         )

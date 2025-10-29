@@ -5,7 +5,7 @@ from edc_visit_schedule.visit import Visit
 from edc_visit_schedule.visit_schedule import VisitSchedule
 
 from ...consents import consent_v1
-from .crfs import crfs, crfs_missed
+from .crfs import crfs, crfs_missed, crfs_unscheduled
 
 
 def get_visit_schedule5(
@@ -66,6 +66,7 @@ def get_visit_schedule5(
                 crfs_missed=crfs_missed,
                 facility_name="7-day-clinic",
                 allow_unscheduled=True,
+                crfs_unscheduled=crfs_unscheduled,
             )
         )
     for visit in visits:

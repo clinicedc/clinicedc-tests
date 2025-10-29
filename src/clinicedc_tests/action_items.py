@@ -1,3 +1,4 @@
+from clinicedc_constants import HIGH_PRIORITY, NO
 from edc_action_item.action import Action
 from edc_action_item.action_with_notification import ActionWithNotification
 from edc_action_item.site_action_items import site_action_items
@@ -11,7 +12,6 @@ from edc_adverse_event.action_items import (
     DeathReportTmgSecondAction,
 )
 from edc_adverse_event.constants import AE_FOLLOWUP_ACTION, DEATH_REPORT_ACTION
-from edc_constants.constants import HIGH_PRIORITY, NO
 from edc_data_manager.action_items import DataQueryAction
 from edc_lab_results.action_items import BloodResultsFbcAction
 from edc_locator.action_items import SubjectLocatorAction
@@ -23,14 +23,14 @@ class OffscheduleAction(ActionWithNotification):
     name = OFFSCHEDULE_ACTION
     display_name = "Submit Off-Schedule"
     notification_display_name = "Off-Schedule"
-    parent_action_names = [
+    parent_action_names = (
         # UNBLINDING_REVIEW_ACTION,
         DEATH_REPORT_ACTION,
         AE_FOLLOWUP_ACTION,
         # LTFU_ACTION,
         # BLOOD_RESULTS_RFT_ACTION,
         # SUBJECT_TRANSFER_ACTION,
-    ]
+    )
     reference_model = "clinicedc_tests.offschedule"
     show_link_to_changelist = True
     priority = HIGH_PRIORITY
@@ -43,11 +43,11 @@ class FormZeroAction(ActionWithNotification):
     reference_model = "clinicedc_tests.formzero"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    parent_action_names = ["submit-form-three"]
+    parent_action_names = ("submit-form-three",)
 
     notification_display_name = "a form zero event has occured"
-    notification_fields = ["f1"]
-    notification_email_to = ["someone@example.com"]
+    notification_fields = ("f1",)
+    notification_email_to = ("someone@example.com",)
 
 
 class TestDoNothingPrnAction(Action):
@@ -59,7 +59,7 @@ class TestDoNothingPrnAction(Action):
 class TestPrnAction(Action):
     name = "test-prn-action"
     display_name = "Test Prn Action"
-    next_actions = [FormZeroAction.name]
+    next_actions = (FormZeroAction.name,)
     parent_action_names = None
 
 
@@ -69,8 +69,8 @@ class FormThreeAction(Action):
     reference_model = "clinicedc_tests.formthree"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = [FormZeroAction.name]
-    parent_action_names = ["submit-form-one"]
+    next_actions = (FormZeroAction.name,)
+    parent_action_names = ("submit-form-one",)
 
 
 class FormTwoAction(Action):
@@ -81,8 +81,8 @@ class FormTwoAction(Action):
     priority = HIGH_PRIORITY
     related_reference_model = "clinicedc_tests.formone"
     related_reference_fk_attr = "form_one"
-    next_actions = ["self"]
-    parent_action_names = ["submit-form-two", "submit-form-one"]
+    next_actions = ("self",)
+    parent_action_names = ("submit-form-two", "submit-form-one")
 
 
 class FormOneAction(Action):
@@ -91,8 +91,8 @@ class FormOneAction(Action):
     reference_model = "clinicedc_tests.formone"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = [FormTwoAction.name, FormThreeAction.name]
-    parent_action_names = ["submit-form-three", "submit-form-four"]
+    next_actions = (FormTwoAction.name, FormThreeAction.name)
+    parent_action_names = ("submit-form-three", "submit-form-four")
 
 
 class FormFourAction(Action):
@@ -101,16 +101,15 @@ class FormFourAction(Action):
     reference_model = "clinicedc_tests.formfour"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    parent_action_names = ["submit-form-one"]
+    parent_action_names = ("submit-form-one",)
 
     def get_next_actions(self):
         next_actions = []
-        next_actions = self.append_to_next_if_required(
+        return self.append_to_next_if_required(
             next_actions=next_actions,
             action_name=FormOneAction.name,
             required=self.reference_obj.happy == NO,
         )
-        return next_actions
 
 
 class FollowupAction(Action):
@@ -119,10 +118,10 @@ class FollowupAction(Action):
     reference_model = "clinicedc_tests.followup"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = ["self"]
+    next_actions = ("self",)
     related_reference_fk_attr = "initial"
     related_reference_model = "clinicedc_tests.initial"
-    parent_action_names = ["submit-followup", "submit-initial"]
+    parent_action_names = ("submit-followup", "submit-initial")
 
 
 class CrfTwoAction(Action):
@@ -131,8 +130,8 @@ class CrfTwoAction(Action):
     reference_model = "clinicedc_tests.crftwo"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = ["self"]
-    parent_action_names = ["submit-crf-two", "submit-crf-one"]
+    next_actions = ("self",)
+    parent_action_names = ("submit-crf-two", "submit-crf-one")
 
 
 class CrfOneAction(Action):
@@ -141,7 +140,7 @@ class CrfOneAction(Action):
     reference_model = "clinicedc_tests.crfone"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = [CrfTwoAction.name]
+    next_actions = (CrfTwoAction.name,)
 
 
 class InitialAction(Action):
@@ -150,7 +149,7 @@ class InitialAction(Action):
     reference_model = "clinicedc_tests.initial"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = [FollowupAction.name]
+    next_actions = (FollowupAction.name,)
 
 
 class SingletonAction(Action):
@@ -169,7 +168,7 @@ class CrfLongitudinalTwoAction(Action):
     show_on_dashboard = True
     priority = HIGH_PRIORITY
     next_actions = None
-    parent_action_names = ["submit-crf-longitudinal-one"]
+    parent_action_names = ("submit-crf-longitudinal-one",)
 
 
 class CrfLongitudinalOneAction(Action):
@@ -178,7 +177,7 @@ class CrfLongitudinalOneAction(Action):
     reference_model = "clinicedc_tests.crflongitudinalone"
     show_on_dashboard = True
     priority = HIGH_PRIORITY
-    next_actions = [CrfLongitudinalTwoAction.name]
+    next_actions = (CrfLongitudinalTwoAction.name,)
 
 
 def register_actions():

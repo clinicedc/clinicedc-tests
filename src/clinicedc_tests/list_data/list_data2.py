@@ -1,8 +1,8 @@
-from edc_constants.constants import OTHER
+from clinicedc_constants import OTHER
 from edc_list_data.row import Row
 
 list_data = {
-    "edc_list_data.antibiotic": [
+    "clinicedc_tests.antibiotic": [
         ("amoxicillin_ampicillin", "Amoxicillin/Ampicillin"),
         ("ceftriaxone", "Ceftriaxone"),
         ("ciprofloxacin", "Ciprofloxacin"),
@@ -12,7 +12,7 @@ list_data = {
         ("gentamicin", "Gentamicin"),
         (OTHER, "Other, specify"),
     ],
-    "edc_list_data.neurological": [
+    "clinicedc_tests.neurological": [
         ("focal_neurologic_deficit", "Focal neurologic deficit"),
         ("meningism", "Meningism"),
         ("papilloedema", " Papilloedema"),
@@ -23,17 +23,17 @@ list_data = {
         ("CN_VI_palsy", "Cranial Nerve VI palsy"),
         (OTHER, "Other CN palsy"),
     ],
-    "edc_list_data.significantnewdiagnosis": [
+    "clinicedc_tests.significantnewdiagnosis": [
         ("bacteraemia", "Bacteraemia"),
         ("bacterial_pneumonia", "Bacterial pneumonia"),
         ("diarrhoeal_wasting", "Diarrhoeal wasting"),
-        ("kaposi_sarcoma", "Kaposi’s sarcoma"),
+        ("kaposi_sarcoma", "Kaposi's sarcoma"),
         ("malaria", "Malaria"),
         ("tb_extra_pulmonary", "TB extra-pulmonary"),
         ("tb_pulmonary", "TB pulmonary"),
         (OTHER, "Other, please specify:"),
     ],
-    "edc_list_data.symptom": [
+    "clinicedc_tests.symptom": [
         Row(("double_vision", "Double vision", "01")),
         Row(("behaviour_change", "Behaviour change", "02")),
         Row(("confusion", "Confusion", "03")),

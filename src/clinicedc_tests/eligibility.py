@@ -1,4 +1,4 @@
-from edc_constants.constants import YES
+from clinicedc_constants import YES
 from edc_screening.fc import FC
 from edc_screening.screening_eligibility import ScreeningEligibility
 
@@ -11,6 +11,6 @@ class MyScreeningEligibility(ScreeningEligibility):
 
     def get_required_fields(self):
         return {
-            "age_in_years": FC(lambda x: x >= 18, "must be >=18"),
+            "age_in_years": FC(lambda x: x >= 18, "must be >=18"),  # noqa: PLR2004
             "alive": FC(YES, "must be alive"),
         }

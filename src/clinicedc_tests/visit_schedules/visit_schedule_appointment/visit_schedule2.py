@@ -25,7 +25,7 @@ def get_visit_schedule2(cdef: ConsentDefinition) -> VisitSchedule:
 
     visits = []
     for index in range(4, 8):
-        visits.append(
+        visits.append(  # noqa: PERF401
             Visit(
                 code=f"{1 if index == 0 else index + 1}000",
                 title=f"Day {1 if index == 0 else index + 1}",

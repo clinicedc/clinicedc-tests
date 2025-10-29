@@ -5,6 +5,7 @@ import string
 from datetime import date, datetime
 from uuid import uuid4
 
+from clinicedc_constants import BLACK, FEMALE, NO, SUBJECT, YES
 from dateutil.relativedelta import relativedelta
 from django.apps import apps as django_apps
 from django.conf import settings
@@ -12,7 +13,6 @@ from django.db import transaction
 from edc_appointment.creators import UnscheduledAppointmentCreator
 from edc_appointment.models import Appointment
 from edc_consent.consent_definition import ConsentDefinition
-from edc_constants.constants import BLACK, FEMALE, NO, SUBJECT, YES
 from edc_utils import get_utcnow
 from edc_visit_schedule.site_visit_schedules import site_visit_schedules
 from edc_visit_tracking.constants import SCHEDULED
@@ -44,13 +44,14 @@ class Helper:
 
     def consent_and_put_on_schedule(
         self,
-        visit_schedule_name: str = None,
-        schedule_name: str = None,
+        *,
+        visit_schedule_name: str,
+        schedule_name: str,
         consent_definition: ConsentDefinition | None = None,
         age_in_years: int | None = None,
         report_datetime: datetime | None = None,
-        gender: str = None,
-        ethnicity: str = None,
+        gender: str | None = None,
+        ethnicity: str | None = None,
         dob: date | None = None,
         guardian_name: str | None = None,
         is_literate: str | None = None,
@@ -91,11 +92,11 @@ class Helper:
 
     def screen_subject(
         self,
-        gender: str = None,
+        gender: str | None = None,
         age_in_years: int | None = None,
         report_datetime: datetime | None = None,
         alive: str | None = None,
-        ethnicity: str = None,
+        ethnicity: str | None = None,
     ):
         gender = gender or FEMALE
         ethnicity = ethnicity or BLACK
@@ -103,10 +104,8 @@ class Helper:
         report_datetime = report_datetime or self.now
         last_name = fake.last_name().replace(" ", "").upper()
         first_name = fake.first_name().replace(" ", "").upper()
-        middle_initial = random.choice(string.ascii_uppercase)  # nosec B311
-        initials = (
-            f"{first_name[0]}{middle_initial}{last_name[0]}".upper()
-        )  # nosec B311
+        middle_initial = random.choice(string.ascii_uppercase)  # noqa: S311
+        initials = f"{first_name[0]}{middle_initial}{last_name[0]}".upper()  # nosec B311
         alive = alive or YES
 
         while self.screening_model_cls.objects.filter(
@@ -134,26 +133,25 @@ class Helper:
         self,
         consent_definition: ConsentDefinition | None = None,
         subject_screening=None,
-        first_name: str = None,
-        last_name: str = None,
+        first_name: str | None = None,
+        last_name: str | None = None,
         dob: date | None = None,
         guardian_name: str | None = None,
         is_literate: str | None = None,
         identity_type: str | None = None,
         consent_datetime: datetime | None = None,
+        subject_identifier: str | None = None,
     ):
         identity = str(uuid4())
         if not consent_definition:
             raise ValueError("Consent definition cannot be None")
         cdef = consent_definition
         with transaction.atomic():
-            subject_consent = cdef.model_create(
+            return cdef.model_create(
                 screening_identifier=subject_screening.screening_identifier,
+                subject_identifier=subject_identifier,
                 consent_datetime=consent_datetime or subject_screening.report_datetime,
-                dob=(
-                    dob
-                    or self.now - relativedelta(years=subject_screening.age_in_years)
-                ),
+                dob=(dob or self.now - relativedelta(years=subject_screening.age_in_years)),
                 identity=identity,
                 confirm_identity=identity,
                 identity_type="country_id" if identity_type is None else identity_type,
@@ -175,13 +173,12 @@ class Helper:
                 is_incarcerated=NO,
                 language="en",
             )
-        return subject_consent
 
     @staticmethod
     def put_subject_on_schedule(
-        subject_consent=None,
-        visit_schedule_name: str = None,
-        schedule_name: str = None,
+        subject_consent,
+        visit_schedule_name: str,
+        schedule_name: str,
         onschedule_datetime: datetime | None = None,
     ):
         visit_schedule = site_visit_schedules.get_visit_schedule(visit_schedule_name)
@@ -190,7 +187,6 @@ class Helper:
             subject_consent.subject_identifier,
             onschedule_datetime or subject_consent.consent_datetime,
         )
-        return None
 
     @staticmethod
     def add_unscheduled_appointment(
@@ -209,55 +205,59 @@ class Helper:
         return creator.appointment
 
     @staticmethod
-    def create_crfs(subject_visit):
+    def create_crfs(subject_visit, models: list[str] | None = None):
         # alphabet = Alphabet.objects.create(
         #     display_name=f"display_name{i}", name=f"name{i}"
         # )
-        crf_one = CrfOne.objects.create(
-            subject_visit=subject_visit,
-            report_datetime=subject_visit.report_datetime,
-        )
-        crf_two = CrfTwo.objects.create(
-            subject_visit=subject_visit,
-            report_datetime=subject_visit.report_datetime,
-        )
-        CrfThree.objects.create(
-            subject_visit=subject_visit,
-            report_datetime=subject_visit.report_datetime,
-            f1=uuid4().hex,
-            f4=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),  # nosec B311
-            f5=uuid4(),
-        )
-        CrfFour.objects.create(
-            subject_visit=subject_visit,
-            report_datetime=subject_visit.report_datetime,
-        )
-        CrfFive.objects.create(
-            subject_visit=subject_visit,
-            report_datetime=subject_visit.report_datetime,
-        )
-        CrfSix.objects.create(
-            subject_visit=subject_visit,
-            report_datetime=subject_visit.report_datetime,
-        )
-        CrfWithInline2.objects.create(
-            crf_one=crf_one,
-            crf_two=crf_two,
-            dte=subject_visit.report_datetime,
-        )
+        if models:
+            for model in models:
+                django_apps.get_model(model).objects.create(
+                    subject_visit=subject_visit,
+                    report_datetime=subject_visit.report_datetime,
+                )
+        else:
+            crf_one = CrfOne.objects.create(
+                subject_visit=subject_visit,
+                report_datetime=subject_visit.report_datetime,
+            )
+            crf_two = CrfTwo.objects.create(
+                subject_visit=subject_visit,
+                report_datetime=subject_visit.report_datetime,
+            )
+            CrfThree.objects.create(
+                subject_visit=subject_visit,
+                report_datetime=subject_visit.report_datetime,
+                f1=uuid4().hex,
+                f4=random.choice([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),  # nosec B311  # noqa: S311
+                f5=uuid4(),
+            )
+            CrfFour.objects.create(
+                subject_visit=subject_visit,
+                report_datetime=subject_visit.report_datetime,
+            )
+            CrfFive.objects.create(
+                subject_visit=subject_visit,
+                report_datetime=subject_visit.report_datetime,
+            )
+            CrfSix.objects.create(
+                subject_visit=subject_visit,
+                report_datetime=subject_visit.report_datetime,
+            )
+            CrfWithInline2.objects.create(
+                crf_one=crf_one,
+                crf_two=crf_two,
+                dte=subject_visit.report_datetime,
+            )
 
-    def enroll_to_baseline(
-        self, subject_visit_model_cls=None, **kwargs
-    ) -> SubjectVisit:
+    def enroll_to_baseline(self, subject_visit_model_cls=None, **kwargs) -> SubjectVisit:
         """Enrolls with first appointment attended"""
         subject_visit_model_cls = subject_visit_model_cls or SubjectVisit
         consent = self.consent_and_put_on_schedule(**kwargs)
         appointment = Appointment.objects.filter(
             subject_identifier=consent.subject_identifier
         ).order_by("appt_datetime")[0]
-        subject_visit = subject_visit_model_cls.objects.create(
+        return subject_visit_model_cls.objects.create(
             appointment=appointment,
             report_datetime=appointment.appt_datetime,
             reason=SCHEDULED,
         )
-        return subject_visit

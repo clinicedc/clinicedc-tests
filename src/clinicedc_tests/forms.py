@@ -18,6 +18,7 @@ from edc_visit_tracking.form_validators import VisitMissedFormValidator
 from edc_visit_tracking.models import SubjectVisitMissed
 
 from .models import (
+    CrfFour,
     CrfThree,
     Member,
     NextAppointmentCrf,
@@ -35,9 +36,7 @@ class OffScheduleFormValidator(FormValidator):
     pass
 
 
-class NextAppointmentCrfFormValidator(
-    NextAppointmentCrfFormValidatorMixin, CrfFormValidator
-):
+class NextAppointmentCrfFormValidator(NextAppointmentCrfFormValidatorMixin, CrfFormValidator):
     pass
 
 
@@ -81,9 +80,7 @@ class OffScheduleForm(
         fields = "__all__"
 
 
-class CrfThreeForm(
-    NextAppointmentCrfModelFormMixin, CrfModelFormMixin, forms.ModelForm
-):
+class CrfThreeForm(NextAppointmentCrfModelFormMixin, CrfModelFormMixin, forms.ModelForm):
     form_validator_cls = NextAppointmentCrfFormValidator
 
     appt_date_fld = "appt_date"
@@ -95,7 +92,13 @@ class CrfThreeForm(
     class Meta:
         model = CrfThree
         fields = "__all__"
-        labels = {"appt_date": "Next scheduled appointment date"}
+        labels = {"appt_date": "Next scheduled appointment date"}  # noqa: RUF012
+
+
+class CrfFourForm(CrfModelFormMixin, forms.ModelForm):
+    class Meta:
+        model = CrfFour
+        fields = "__all__"
 
 
 class NextAppointmentCrfForm(
@@ -151,9 +154,7 @@ class StudyMedicationForm(CrfModelFormMixin, forms.ModelForm):
 class MemberFormValidator(FormValidator):
     def clean(self) -> None:
         if self.cleaned_data.get("player_name") != "not-a-uuid":
-            self.raise_validation_error(
-                {"player_name": "Cannot be a UUID"}, INVALID_ERROR
-            )
+            self.raise_validation_error({"player_name": "Cannot be a UUID"}, INVALID_ERROR)
 
 
 class TeamFormValidator(FormValidator):

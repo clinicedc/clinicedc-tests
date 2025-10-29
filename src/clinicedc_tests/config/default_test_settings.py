@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import datetime
 from importlib.resources import files
-from typing import List
+from pathlib import Path
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
@@ -62,10 +62,10 @@ class DefaultTestSettings:
         add_adverse_event_dashboard_middleware=None,
         add_multisite_middleware=None,
         template_dirs=None,
-        selected_database: str = None,
+        selected_database: str | None = None,
         **kwargs,
     ):
-        self.calling_file = os.path.basename(calling_file) if calling_file else None
+        self.calling_file = Path(calling_file).name if calling_file else None
         self.base_dir = base_dir or kwargs.get("BASE_DIR")
         self.app_name = app_name or kwargs.get("APP_NAME")
         self.selected_database = selected_database or "sqlite"
@@ -75,8 +75,7 @@ class DefaultTestSettings:
             APP_NAME=self.app_name,
             BASE_DIR=self.base_dir,
             INSTALLED_APPS=self.installed_apps,
-            ETC_DIR=kwargs.get("ETC_DIR")
-            or self.base_dir / self.app_name / "tests" / "etc",
+            ETC_DIR=kwargs.get("ETC_DIR") or self.base_dir / self.app_name / "tests" / "etc",
             TEST_DIR=kwargs.get("TEST_DIR") or self.base_dir / self.app_name / "tests",
             HOLIDAY_FILE=(
                 kwargs.get("HOLIDAY_FILE") or files("clinicedc_tests") / "holidays.csv"
@@ -92,9 +91,7 @@ class DefaultTestSettings:
 
         self.update_root_urlconf(use_test_urls)
         if not add_multisite_middleware:
-            self.settings["MIDDLEWARE"].remove(
-                "multisite.middleware.DynamicSiteMiddleware"
-            )
+            self.settings["MIDDLEWARE"].remove("multisite.middleware.DynamicSiteMiddleware")
 
         if add_dashboard_middleware:
             self.settings["MIDDLEWARE"].extend(
@@ -129,7 +126,7 @@ class DefaultTestSettings:
                 self.settings.update(ROOT_URLCONF=f"{self.app_name}.urls")
 
     @property
-    def default_context_processors(self) -> List[str]:
+    def default_context_processors(self) -> list[str]:
         return [
             "django.contrib.auth.context_processors.auth",
             "django.contrib.messages.context_processors.messages",
@@ -137,7 +134,7 @@ class DefaultTestSettings:
         ]
 
     @property
-    def edc_context_processors(self) -> List[str]:
+    def edc_context_processors(self) -> list[str]:
         context_processors = []
         if [a for a in self.installed_apps if a.startswith("edc_model_admin")]:
             context_processors.append("edc_model_admin.context_processors.admin_theme")
@@ -162,6 +159,8 @@ class DefaultTestSettings:
             databases = self.mysql_databases_setting()
         elif self.selected_database == "mysql_with_client":
             databases = self.mysql_databases_setting(client=True)
+        else:
+            raise ValueError(f"Unknown database. Got {self.selected_database}")
         self.settings.update(
             ALLOWED_HOSTS=["localhost"],
             STATIC_URL="/static/",
@@ -195,9 +194,7 @@ class DefaultTestSettings:
             LIVE_SYSTEM=False,
             REVIEWER_SITE_ID=0,
             SITE_ID=SiteID(default=1) if SiteID else 1,
-            SILENCED_SYSTEM_CHECKS=[
-                "sites.E101"
-            ],  # The SITE_ID setting must be an integer
+            SILENCED_SYSTEM_CHECKS=["sites.E101"],  # The SITE_ID setting must be an integer
             SECRET_KEY=uuid4().hex,
             INDEX_PAGE_LABEL="",
             DASHBOARD_URL_NAMES={},
@@ -258,10 +255,10 @@ class DefaultTestSettings:
     def _manage_encryption_keys(self):
         # update settings if running runtests directly from the command line
         if self.calling_file and self.calling_file == sys.argv[0]:
-            key_path = self.settings.get("ETC_DIR")
-            if not os.path.exists(key_path):
-                os.mkdir(key_path)
-            auto_create_keys = True if len(os.listdir(key_path)) == 0 else False
+            key_path = Path(self.settings.get("ETC_DIR"))
+            if not key_path.exists():
+                key_path.mkdir()
+            auto_create_keys = len(list(key_path.iterdir())) == 0
             self.settings.update(
                 DEBUG=False,
                 DJANGO_CRYPTO_FIELDS_KEY_PATH=key_path,

@@ -1,8 +1,8 @@
-from edc_constants.constants import HOSPITALIZED, OTHER
+from clinicedc_constants import HOSPITALIZED, OTHER
 
 list_data = {
     "edc_visit_tracking.subjectvisitmissedreasons": [
-        ("forgot", "Forgot / Can’t remember being told about appointment"),
+        ("forgot", "Forgot / Can't remember being told about appointment"),
         ("family_emergency", "Family emergency (e.g. funeral) and was away"),
         ("travelling", "Away travelling/visiting"),
         ("working_schooling", "Away working/schooling"),

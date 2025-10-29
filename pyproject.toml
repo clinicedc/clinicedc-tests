@@ -1,15 +1,6 @@
-[build-system]
-requires = ["uv_build>=0.8.2,<0.9.0"]
-build-backend = "uv_build"
-
-[tool.uv.build-backend]
-module-root = "src"
-source-exclude = ["bin"]
-namespace = false
-
 [project]
 name = "clinicedc-tests"
-version = "0.2.0"
+version = "0.3.0"
 description = "Shared test config and utils for clinicedc projects and related apps"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 keywords = ["django", "clinicedc", "edc", "clinical trials", "research", "data management", "esource"]
@@ -36,7 +27,7 @@ license = "GPL-3.0-or-later"
 license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "clinicedc>=2.0.28",
+    "clinicedc>=2.0.39",
     "faker>=37.4.2",
     "model-bakery>=1.20.5",
     "time-machine>=2.16.0",
@@ -49,15 +40,77 @@ Documentation = "https://github.com/clinicedc/clinicedc-tests/docs"
 Repository = "https://github.com/clinicedc/clinicedc-tests.git"
 Changelog = "https://github.com/clinicedc/clinicedc-tests/blob/main/CHANGES"
 
-[tool.black]
-line-length = 88
-target-version = ["py312"]
-extend-exclude = '''^(.*\/)*\b(migrations|\.venv)\b($|\/.*$)'''
 
-[tool.isort]
-profile = "black"
-py_version = "312"
-skip = [".tox", ".eggs", "migrations", "_version.py", ".venv"]
+[build-system]
+requires = ["uv_build>=0.9.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = "src"
+source-exclude = ["bin"]
+namespace = false
+
+[tool.ruff]
+line-length = 95
+indent-width = 4
+target-version = "py312"
+extend-exclude = ["migrations", ".tox", ".venv"]
+
+[tool.ruff.lint]
+select = [
+    "A",
+    "ARG",
+    "B",
+    "C90",
+    "COM",
+    "DJ",
+    "DTZ",
+    "E",
+    "F",
+    "FA",
+    "FURB",
+    "I",
+    "INT",
+    "N",
+    "PD",
+    "PERF",
+    "PL",
+    "PLR",
+    "PTH",
+    "RET",
+    "RUF",
+    "S",
+    "SIM",
+    "T20",
+    "TRY",
+    "UP",
+    "W",
+    # "FIX",
+]
+ignore = [
+    "DJ008",
+    "DJ007",
+    "DJ006",
+    "COM812",
+    "PLC0206",
+    "TRY003", # temporarily
+    "PLR0913", # temporarily
+    "ARG001", # temporarily
+    "DJ012", # temporarily
+]
+
+
+[tool.ruff.lint.per-file-ignores]
+    "__init__.py" = ["F401"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
 
 [tool.coverage.run]
 parallel = false
