@@ -63,6 +63,7 @@ class DefaultTestSettings:
         add_multisite_middleware=None,
         template_dirs=None,
         selected_database: str | None = None,
+        clinicedc_tests_label: str | None = None,
         **kwargs,
     ):
         self.calling_file = Path(calling_file).name if calling_file else None
@@ -70,15 +71,23 @@ class DefaultTestSettings:
         self.app_name = app_name or kwargs.get("APP_NAME")
         self.selected_database = selected_database or "sqlite"
         self.installed_apps = kwargs.get("INSTALLED_APPS")
+        if (
+            not clinicedc_tests_label
+            and "clinicedc_tests" not in self.installed_apps
+            and "clinicedc_tests.apps.AppConfig" not in self.installed_apps
+        ):
+            self.clinicedc_tests = self.app_name
+        else:
+            self.clinicedc_tests = clinicedc_tests_label or "clinicedc_tests"
 
         self.settings = dict(
             APP_NAME=self.app_name,
             BASE_DIR=self.base_dir,
             INSTALLED_APPS=self.installed_apps,
-            ETC_DIR=kwargs.get("ETC_DIR") or self.base_dir / self.app_name / "tests" / "etc",
-            TEST_DIR=kwargs.get("TEST_DIR") or self.base_dir / self.app_name / "tests",
+            ETC_DIR=kwargs.get("ETC_DIR") or self.base_dir / "tests" / "etc",
+            TEST_DIR=kwargs.get("TEST_DIR") or self.base_dir / "tests",
             HOLIDAY_FILE=(
-                kwargs.get("HOLIDAY_FILE") or files("clinicedc_tests") / "holidays.csv"
+                kwargs.get("HOLIDAY_FILE") or files(self.clinicedc_tests) / "holidays.csv"
             ),
         )
 
@@ -210,22 +219,22 @@ class DefaultTestSettings:
             SENTRY_ENABLED=False,
             TWILIO_ENABLED=False,
             TWILIO_TEST_RECIPIENT="+15555555555",
-            SUBJECT_SCREENING_MODEL="clinicedc_tests.subjectscreening",
-            SUBJECT_CONSENT_MODEL="clinicedc_tests.subjectconsent",
+            SUBJECT_SCREENING_MODEL=f"{self.clinicedc_tests}.subjectscreening",
+            SUBJECT_CONSENT_MODEL=f"{self.clinicedc_tests}.subjectconsent",
             SUBJECT_VISIT_MODEL="edc_visit_tracking.subjectvisit",
             SUBJECT_VISIT_MISSED_MODEL="edc_visit_tracking.subjectvisitmissed",
-            SUBJECT_REQUISITION_MODEL="clinicedc_tests.subjectrequisition",
+            SUBJECT_REQUISITION_MODEL=f"{self.clinicedc_tests}.subjectrequisition",
             SUBJECT_REFUSAL_MODEL="edc_refusal.subjectrefusal",
-            SUBJECT_APP_LABEL="clinicedc_tests",
-            ADVERSE_EVENT_ADMIN_SITE="clinicedc_tests",
-            ADVERSE_EVENT_APP_LABEL="clinicedc_tests",
+            SUBJECT_APP_LABEL=self.clinicedc_tests,
+            ADVERSE_EVENT_ADMIN_SITE=self.clinicedc_tests,
+            ADVERSE_EVENT_APP_LABEL=self.clinicedc_tests,
             EDC_LTFU_MODEL_NAME="edc_ltfu.ltfu",
             DJANGO_COLLECT_OFFLINE_ENABLED=False,
             DJANGO_COLLECT_OFFLINE_FILES_REMOTE_HOST=None,
             DJANGO_COLLECT_OFFLINE_FILES_USB_VOLUME=None,
             DJANGO_COLLECT_OFFLINE_FILES_USER=None,
             DJANGO_COLLECT_OFFLINE_SERVER_IP=None,
-            EDC_NAVBAR_DEFAULT="clinicedc_tests",
+            EDC_NAVBAR_DEFAULT=self.clinicedc_tests,
             EDC_PROTOCOL_PROJECT_NAME="CLINICEDC TEST PROJECT",
             EDC_PROTOCOL_STUDY_OPEN_DATETIME=(
                 utcnow.replace(microsecond=0, second=0, minute=0, hour=0)
@@ -238,8 +247,8 @@ class DefaultTestSettings:
             EDC_PROTOCOL_NUMBER="101",
             EDC_FACILITY_USE_DEFAULTS=True,
             EDC_FACILITY_DEFAULT_FACILITY_NAME="7-day-clinic",
-            LIST_MODEL_APP_LABEL="clinicedc_tests",
-            EDC_RANDOMIZATION_LIST_PATH=self.base_dir.parent / "tests" / "etc",
+            LIST_MODEL_APP_LABEL=self.clinicedc_tests,
+            EDC_RANDOMIZATION_LIST_PATH=self.base_dir / "tests" / "etc",
             EDC_RANDOMIZATION_REGISTER_DEFAULT_RANDOMIZER=True,
             EDC_RANDOMIZATION_SKIP_VERIFY_CHECKS=True,
             EDC_DATA_MANAGER_POPULATE_DATA_DICTIONARY=False,
