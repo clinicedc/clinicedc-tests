@@ -18,9 +18,7 @@ class Panel(DummyPanel):
     """
 
     def __init__(self, name):
-        super().__init__(
-            requisition_model="clinicedc_tests.subjectrequisition", name=name
-        )
+        super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
 
 
 crfs = CrfCollection(
@@ -41,7 +39,8 @@ requisitions = RequisitionCollection(
 )
 
 
-def get_visit_schedule(cdef):
+def get_visit_schedule(cdef, allow_unscheduled: bool | None = None):
+    allow_unscheduled = True if allow_unscheduled is None else allow_unscheduled
     visit_schedule = VisitSchedule(
         name="visit_schedule1",
         offstudy_model="edc_offstudy.subjectoffstudy",
@@ -58,7 +57,7 @@ def get_visit_schedule(cdef):
 
     visits = []
     for index in range(0, 4):
-        visits.append(
+        visits.append(  # noqa: PERF401
             Visit(
                 code=f"{index + 1}000",
                 title=f"Day {index + 1}",
@@ -68,7 +67,7 @@ def get_visit_schedule(cdef):
                 rupper=relativedelta(days=6),
                 requisitions=requisitions,
                 crfs=crfs,
-                allow_unscheduled=True,
+                allow_unscheduled=allow_unscheduled,
             )
         )
     for visit in visits:

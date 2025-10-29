@@ -1,5 +1,5 @@
 list_data = {
-    "edc_list_data.antibiotic": [
+    "clinicedc_tests.antibiotic": [
         ("one", "One"),
         ("two", "Two"),
         ("three", "Three"),

@@ -16,8 +16,15 @@ from edc_visit_tracking.modeladmin_mixins import CrfModelAdminMixin
 
 from .admin_site import clinicedc_tests_admin
 from .form_labels import MyCustomLabelCondition
-from .forms import MemberForm, TeamForm, TeamWithDifferentFieldsForm, TestModel3Form
+from .forms import (
+    CrfFourForm,
+    MemberForm,
+    TeamForm,
+    TeamWithDifferentFieldsForm,
+    TestModel3Form,
+)
 from .models import (
+    Antibiotic,
     CrfFive,
     CrfFour,
     CrfOne,
@@ -26,8 +33,11 @@ from .models import (
     CrfThree,
     CrfTwo,
     Member,
+    Neurological,
     RedirectNextModel,
+    SignificantNewDiagnosis,
     SubjectRequisition,
+    Symptom,
     Team,
     TeamWithDifferentFields,
     TestModel3,
@@ -46,10 +56,8 @@ summary_fieldset = Fieldset("summary_one", "summary_two", section="Summary")
 
 
 @admin.register(CrfOne)
-class CrfOneModelAdmin(
-    CrfModelAdminMixin, ModelAdminAuditFieldsMixin, admin.ModelAdmin
-):
-    def get_field_queryset(self, db, db_field, request):
+class CrfOneModelAdmin(CrfModelAdminMixin, ModelAdminAuditFieldsMixin, admin.ModelAdmin):
+    def get_field_queryset(self, db, db_field, request):  # noqa: ARG002
         return CrfOne.objects.all()
 
 
@@ -82,9 +90,9 @@ class TestModel4Admin(FieldsetsModelAdminMixin, admin.ModelAdmin):
 
     """
 
-    fieldsets_move_to_end = ["Summary", audit_fieldset_tuple[0]]
+    fieldsets_move_to_end = ("Summary", audit_fieldset_tuple[0])
 
-    conditional_fieldsets = {"2000": (visit_two_fieldset,)}
+    conditional_fieldsets = {"2000": (visit_two_fieldset,)}  # noqa: RUF012
 
     fieldsets = (
         (
@@ -107,12 +115,10 @@ class TestModel5Admin(FormLabelModelAdminMixin, admin.ModelAdmin):
         ),
     )
 
-    custom_form_labels = [
+    custom_form_labels = [  # noqa: RUF012
         FormLabel(
             field="circumcised",
-            custom_label=(
-                "Since we last saw you in {previous_visit}, were you circumcised?"
-            ),
+            custom_label="Since we last saw you in {previous_visit}, were you circumcised?",
             condition_cls=MyCustomLabelCondition,
         )
     ]
@@ -126,7 +132,7 @@ class TestModel6Admin(FieldsetsModelAdminMixin, admin.ModelAdmin):
     form if the visit_code is '2000'
     """
 
-    conditional_fieldsets = {"2000": (visit_two_fieldset,)}
+    conditional_fieldsets = {"2000": (visit_two_fieldset,)}  # noqa: RUF012
 
     fieldsets = (
         (
@@ -150,9 +156,7 @@ class CrfOneAdmin(BaseModelAdmin, admin.ModelAdmin):
 
 
 @admin.register(RedirectNextModel, site=clinicedc_tests_admin)
-class RedirectNextModelAdmin(
-    BaseModelAdmin, ModelAdminNextUrlRedirectMixin, admin.ModelAdmin
-):
+class RedirectNextModelAdmin(BaseModelAdmin, ModelAdminNextUrlRedirectMixin, admin.ModelAdmin):
     pass
 
 
@@ -179,26 +183,33 @@ class SubjectRequisitionAdmin(
 
 
 @admin.register(CrfFour, site=clinicedc_tests_admin)
-class CrfFourAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
-    post_url_on_delete_name = "dashboard_url"
+class CrfFourAdmin(ModelAdminCrfDashboardMixin, admin.ModelAdmin):
+    post_url_on_delete_name = "test_dashboard_url"
+    show_save_next = True
+    show_cancel = True
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    form = CrfFourForm
+
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
 
 
 @admin.register(CrfFive, site=clinicedc_tests_admin)
 class CrfFiveAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
-    post_url_on_delete_name = "dashboard2_url"
+    post_url_on_delete_name = "test_dashboard2_url"
+    show_save_next = True
+    show_cancel = True
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
 
 
 @admin.register(CrfSix, site=clinicedc_tests_admin)
 class CrfSixAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
     post_url_on_delete_name = None
+    show_cancel = True
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
 
 
@@ -228,7 +239,7 @@ class MemberInlineAdmin(admin.TabularInline):
 class VenueAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmin):
     post_url_on_delete_name = "dashboard_url"
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
 
 
@@ -237,10 +248,10 @@ class TeamAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAdmi
     post_url_on_delete_name = "dashboard_url"
 
     form = TeamForm
-    inlines = [MemberInlineAdmin]
+    inlines = (MemberInlineAdmin,)
     fieldsets = ((None, ({"fields": ("name", "created", "modified")})),)
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
 
 
@@ -256,7 +267,7 @@ class TeamWithDifferentFieldsAdmin(
     # by FormRunner.run even though blank=False
     fieldsets = ((None, ({"fields": ("size", "color", "mood")})),)
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
 
 
@@ -266,5 +277,11 @@ class MemberAdmin(BaseModelAdmin, ModelAdminRedirectOnDeleteMixin, admin.ModelAd
 
     form = MemberForm
 
-    def post_url_on_delete_kwargs(self, request, obj):
+    def post_url_on_delete_kwargs(self, request, obj):  # noqa: ARG002
         return {"subject_identifier": obj.subject_identifier}
+
+
+clinicedc_tests_admin.register(Antibiotic)
+clinicedc_tests_admin.register(Neurological)
+clinicedc_tests_admin.register(Symptom)
+clinicedc_tests_admin.register(SignificantNewDiagnosis)

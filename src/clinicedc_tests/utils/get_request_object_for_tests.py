@@ -15,9 +15,9 @@ __all__ = ["get_request_object_for_tests"]
 
 def get_request_object_for_tests(user: User) -> HttpRequest:
     request = HttpRequest()
-    setattr(request, "session", "session")
+    request.session = "session"
     messages = FallbackStorage(request)
-    setattr(request, "_messages", messages)
-    setattr(request, "user", user)
-    setattr(request, "site", Site.objects.get(id=settings.SITE_ID))
+    request._messages = messages
+    request.user = user
+    request.site = Site.objects.get(id=settings.SITE_ID)
     return request

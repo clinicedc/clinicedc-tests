@@ -16,7 +16,7 @@ style = color_style()
 if TYPE_CHECKING:
     from django.contrib.auth.models import User
 
-__all__ = ["get_webtest_form", "get_or_create_group", "login"]
+__all__ = ["get_or_create_group", "get_webtest_form", "login"]
 
 
 def get_webtest_form(response):
@@ -51,9 +51,9 @@ def login(
     if user.is_superuser:
         warn(
             style.WARNING(
-                "\nWarning: Running test where logged in "
-                "user is a superuser. See login() \n"
-            )
+                "\nWarning: Running test where logged in user is a superuser. See login() \n"
+            ),
+            stacklevel=2,
         )
     user.is_active = True
     user.is_staff = True
@@ -78,12 +78,11 @@ def login(
         extra_environ=extra_environ,
     )
     response = response.maybe_follow(extra_environ=extra_environ)
-    for index, form in response.forms.items():
+    for form in response.forms.values():
         if form.action == "/i18n/setlang/":
             # exclude the locale form
             continue
-        else:
-            break
+        break
     form["username"] = user.username
-    form["password"] = "pass"  # nosec B105
+    form["password"] = "pass"  # noqa: S105
     return form.submit(extra_environ=extra_environ)

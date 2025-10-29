@@ -1,5 +1,5 @@
 model_data = {
-    "edc_list_data.consignee": [
+    "clinicedc_tests.consignee": [
         {
             "name": "The META Trial",
             "contact": "Sokoine Kivuyo",

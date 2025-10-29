@@ -2,6 +2,7 @@ import uuid
 from typing import Any
 from uuid import uuid4
 
+from clinicedc_constants import GRAMS_PER_DECILITER, MICROMOLES_PER_LITER, NULL_STRING, YES
 from django.db import models
 from django.db.models import Manager
 from django.db.models.deletion import CASCADE, PROTECT
@@ -35,7 +36,6 @@ from edc_consent.model_mixins import (
     RequiresConsentFieldsModelMixin,
 )
 from edc_constants.choices import YES_NO, YES_NO_NA
-from edc_constants.constants import YES
 from edc_crf.model_mixins import (
     CrfInlineModelMixin,
     CrfModelMixin,
@@ -75,7 +75,6 @@ from edc_protocol.validators import (
 )
 from edc_randomization.model_mixins import RandomizationListModelMixin
 from edc_registration.model_mixins import UpdatesOrCreatesRegistrationModelMixin
-from edc_reportable import GRAMS_PER_DECILITER, MICROMOLES_PER_LITER
 from edc_reportable.choices import REPORTABLE
 from edc_screening.model_mixins import EligibilityModelMixin, ScreeningModelMixin
 from edc_screening.screening_eligibility import ScreeningEligibility
@@ -95,74 +94,74 @@ from edc_visit_tracking.models import SubjectVisit
 from .eligibility import MyScreeningEligibility
 
 __all__ = [
-    "SubjectScreening",
-    "SubjectScreeningWithoutEligibility",
-    "SubjectScreeningSimple",
-    "SubjectConsent",
-    "SubjectConsentV1",
-    "SubjectConsentV1Ext",
-    "SubjectConsentUgV1",
-    "SubjectConsentV2",
-    "SubjectConsentV3",
-    "SubjectConsentV4",
-    "SubjectConsentUpdateToV3",
-    "SubjectReconsent",
-    "SubjectConsent2",
-    "SubjectRequisition",
-    "CrfOne",
-    "CrfTwo",
-    "CrfThree",
-    "CrfFour",
-    "CrfFive",
-    "CrfSix",
-    "CrfSeven",
-    "SubjectIdentifierModel",
-    "OnScheduleOne",
-    "OnScheduleTwo",
-    "OnScheduleThree",
-    "OnScheduleFour",
-    "OnScheduleFive",
-    "OnScheduleSix",
-    "OnScheduleSeven",
-    "OnScheduleEight",
-    "OffScheduleOne",
-    "OffScheduleTwo",
-    "OffScheduleThree",
-    "OffScheduleFour",
-    "OffScheduleFive",
-    "OffScheduleSix",
-    "OffScheduleSeven",
-    "OffScheduleEight",
-    "TestModelWithoutMixin",
-    "TestModelWithActionDoesNotCreateAction",
-    "TestModelWithAction",
-    "Aesi",
-    "AeTmg",
-    "DeathReport",
-    "DeathReportTmg",
     "AeFollowup",
     "AeInitial",
     "AeSusar",
-    "FormZero",
-    "FormOne",
-    "FormTwo",
-    "FormThree",
-    "FormFour",
-    "Initial",
-    "Followup",
-    "MyAction",
-    "NextAppointmentCrf",
+    "AeTmg",
+    "Aesi",
+    "CrfFive",
+    "CrfFour",
     "CrfLongitudinalOne",
     "CrfLongitudinalTwo",
-    "MedicationAdherence",
+    "CrfOne",
+    "CrfSeven",
+    "CrfSix",
+    "CrfThree",
+    "CrfTwo",
+    "DeathReport",
+    "DeathReportTmg",
+    "Followup",
+    "FormFour",
+    "FormOne",
+    "FormThree",
+    "FormTwo",
+    "FormZero",
     "Hospitalization",
+    "Initial",
+    "MedicationAdherence",
+    "MyAction",
+    "NextAppointmentCrf",
+    "OffScheduleEight",
+    "OffScheduleFive",
+    "OffScheduleFour",
+    "OffScheduleOne",
+    "OffScheduleSeven",
+    "OffScheduleSix",
+    "OffScheduleThree",
+    "OffScheduleTwo",
+    "OnScheduleEight",
+    "OnScheduleFive",
+    "OnScheduleFour",
+    "OnScheduleOne",
+    "OnScheduleSeven",
+    "OnScheduleSix",
+    "OnScheduleThree",
+    "OnScheduleTwo",
+    "SubjectConsent",
+    "SubjectConsent2",
+    "SubjectConsentUgV1",
+    "SubjectConsentUpdateToV3",
+    "SubjectConsentV1",
+    "SubjectConsentV1Ext",
+    "SubjectConsentV2",
+    "SubjectConsentV3",
+    "SubjectConsentV4",
+    "SubjectIdentifierModel",
+    "SubjectReconsent",
+    "SubjectRequisition",
+    "SubjectScreening",
+    "SubjectScreeningSimple",
+    "SubjectScreeningWithoutEligibility",
+    "TestModelWithAction",
+    "TestModelWithActionDoesNotCreateAction",
+    "TestModelWithoutMixin",
 ]
 
 
 class SubjectScreening(ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel):
     eligibility_cls = ScreeningEligibility
 
-    thing = models.CharField(max_length=10, null=True)
+    thing = models.CharField(max_length=10, default=NULL_STRING)
     alive = models.CharField(max_length=10, default=YES)
 
     def get_consent_definition(self):
@@ -173,7 +172,7 @@ class SubjectScreening(ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel
 
 
 class MySubjectScreening(ScreeningModelMixin, EligibilityModelMixin, BaseUuidModel):
-    thing = models.CharField(max_length=10, null=True)
+    thing = models.CharField(max_length=10, default=NULL_STRING)
 
     eligibility_cls = MyScreeningEligibility
 
@@ -393,9 +392,9 @@ class SubjectVisitWithoutAppointment(
 class SubjectRequisition(RequisitionModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    is_drawn = models.CharField(max_length=25, choices=YES_NO, null=True)
+    is_drawn = models.CharField(max_length=25, choices=YES_NO, default=NULL_STRING)
 
-    reason_not_drawn = models.CharField(max_length=25, null=True)
+    reason_not_drawn = models.CharField(max_length=25, default=NULL_STRING)
 
     def update_reference_on_save(self):
         pass
@@ -415,15 +414,13 @@ class SubjectIdentifierModel(NonUniqueSubjectIdentifierFieldMixin, BaseUuidModel
     history = HistoricalRecords()
 
     def natural_key(self):
-        return (self.subject_identifier,)  # noqa
+        return (self.subject_identifier,)
 
     class Meta(BaseUuidModel.Meta, NonUniqueSubjectIdentifierFieldMixin.Meta):
         pass
 
 
-class OffSchedule(
-    SiteModelMixin, OffScheduleModelMixin, ActionModelMixin, BaseUuidModel
-):
+class OffSchedule(SiteModelMixin, OffScheduleModelMixin, ActionModelMixin, BaseUuidModel):
     action_name = OFFSCHEDULE_ACTION
     offschedule_compare_dates_as_datetimes = False
 
@@ -553,7 +550,7 @@ class FormZero(
 ):
     action_name = "submit-form-zero"
 
-    f1 = models.CharField(max_length=100, null=True)
+    f1 = models.CharField(max_length=100, default=NULL_STRING)
 
 
 class FormOne(
@@ -564,7 +561,7 @@ class FormOne(
 ):
     action_name = "submit-form-one"
 
-    f1 = models.CharField(max_length=100, null=True)
+    f1 = models.CharField(max_length=100, default=NULL_STRING)
 
 
 class FormTwo(
@@ -628,9 +625,9 @@ class MyAction(
 
 
 class Alphabet(models.Model):
-    display_name = models.CharField(max_length=25, null=True)
+    display_name = models.CharField(max_length=25, default=NULL_STRING)
 
-    name = models.CharField(max_length=25, null=True)
+    name = models.CharField(max_length=25, default=NULL_STRING)
 
 
 class ListModel(ListModelMixin):
@@ -638,13 +635,13 @@ class ListModel(ListModelMixin):
 
 
 class ListOne(BaseListModelMixin, BaseUuidModel):
-    char1 = models.CharField(max_length=25, null=True)
+    char1 = models.CharField(max_length=25, default=NULL_STRING)
 
     dte = models.DateTimeField(default=timezone.now)
 
 
 class ListTwo(BaseListModelMixin, BaseUuidModel):
-    char1 = models.CharField(max_length=25, null=True)
+    char1 = models.CharField(max_length=25, default=NULL_STRING)
 
     dte = models.DateTimeField(default=timezone.now)
 
@@ -660,7 +657,7 @@ class CrfEncrypted(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel)
 class Crf(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    char1 = models.CharField(max_length=25, null=True)
+    char1 = models.CharField(max_length=25, default=NULL_STRING)
 
     date1 = models.DateTimeField(null=True)
 
@@ -675,7 +672,7 @@ class Crf(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel):
 
 class CrfOne(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidModel):
     subject_visit = models.OneToOneField(
-        "edc_visit_tracking.subjectvisit",  # noqa
+        "edc_visit_tracking.subjectvisit",
         on_delete=CASCADE,
         related_name="edc_action_item_test_visit_one",
     )
@@ -699,7 +696,7 @@ class CrfOne(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidMode
 
 class CrfTwo(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidModel):
     subject_visit = models.OneToOneField(
-        "edc_visit_tracking.subjectvisit",  # noqa
+        "edc_visit_tracking.subjectvisit",
         on_delete=CASCADE,
         related_name="edc_action_item_test_visit_two",
     )
@@ -726,11 +723,11 @@ class CrfThree(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
     f4 = models.IntegerField(null=True, blank=True)
 
@@ -744,43 +741,64 @@ class CrfThree(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
 
 
 class CrfFour(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
+    """An easy model for tests because only needs subject_visit.
+
+    For example:
+        crf = CrfFour.objects.create(subject_visit=subject_visit)
+
+    """
+
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
 
 class CrfFive(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
+    """An easy model for tests because only needs subject_visit.
+
+    For example:
+        crf = CrfFive.objects.create(subject_visit=subject_visit)
+
+    """
+
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
 
 class CrfSix(CrfModelMixin, BaseUuidModel):
+    """An easy model for tests because only needs subject_visit.
+
+    For example:
+        crf = CrfSix.objects.create(subject_visit=subject_visit)
+
+    """
+
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
     next_appt_date = models.DateField(null=True, blank=True)
 
-    next_visit_code = models.CharField(max_length=50, null=True, blank=True)
+    next_visit_code = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
 
 class CrfSeven(CrfModelMixin, BaseUuidModel):
@@ -788,11 +806,11 @@ class CrfSeven(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
     visitschedule = models.ForeignKey(
         VisitSchedule, on_delete=PROTECT, max_length=15, null=True, blank=False
@@ -800,17 +818,15 @@ class CrfSeven(CrfModelMixin, BaseUuidModel):
 
 
 class CrfEight(CrfModelMixin, CrfStatusModelMixin, BaseUuidModel):
-    """Crf use SubjectVisit without appointment"""
-
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
     @property
     def related_visit(self):
@@ -847,7 +863,7 @@ class CrfWithInline(CrfModelMixin, BaseUuidModel):
 
     list_two = models.ForeignKey(ListTwo, on_delete=models.PROTECT)
 
-    char1 = models.CharField(max_length=25, null=True)
+    char1 = models.CharField(max_length=25, default=NULL_STRING)
 
     dte = models.DateTimeField(default=timezone.now)
 
@@ -893,11 +909,11 @@ class BadCrfOneInline(CrfInlineModelMixin, BaseUuidModel):
 class BadCrfNoRelatedVisit(SiteModelMixin, VisitTrackingCrfModelMixin, BaseUuidModel):
     subject_visit = None
 
-    f1 = models.CharField(max_length=50, null=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING)
 
-    f2 = models.CharField(max_length=50, null=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING)
 
-    f3 = models.CharField(max_length=50, null=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING)
 
     class Meta(BaseUuidModel.Meta):
         pass
@@ -914,11 +930,11 @@ class CrfLongitudinalOne(
 ):
     action_name = "submit-crf-longitudinal-one"
 
-    f1 = models.CharField(max_length=50, null=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING)
 
-    f2 = models.CharField(max_length=50, null=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING)
 
-    f3 = models.CharField(max_length=50, null=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING)
 
 
 class CrfLongitudinalTwo(
@@ -928,11 +944,11 @@ class CrfLongitudinalTwo(
 ):
     action_name = "submit-crf-longitudinal-two"
 
-    f1 = models.CharField(max_length=50, null=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING)
 
-    f2 = models.CharField(max_length=50, null=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING)
 
-    f3 = models.CharField(max_length=50, null=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING)
 
 
 # edc-adherence
@@ -1009,21 +1025,23 @@ class Hospitalization(
 
 
 class PiiModel(models.Model):
-    name = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=50, default=NULL_STRING)
 
     class Meta:
         permissions = (("be_happy", "Can be happy"),)
 
 
 class AuditorModel(models.Model):
-    name = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=50, default=NULL_STRING)
 
     class Meta:
         permissions = (("be_sad", "Can be sad"),)
 
 
 class TestModel(BaseUuidModel):
-    name = models.CharField(verbose_name="What is your name?", max_length=50, null=True)
+    name = models.CharField(
+        verbose_name="What is your name?", max_length=50, default=NULL_STRING
+    )
     report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
@@ -1031,7 +1049,9 @@ class TestModel(BaseUuidModel):
 
 
 class TestModel2(BaseUuidModel):
-    name = models.CharField(verbose_name="What is your name?", max_length=50, null=True)
+    name = models.CharField(
+        verbose_name="What is your name?", max_length=50, default=NULL_STRING
+    )
     report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
@@ -1039,7 +1059,7 @@ class TestModel2(BaseUuidModel):
 
 
 class TestModelPermissions(BaseUuidModel):
-    name = models.CharField(max_length=50, null=True)
+    name = models.CharField(max_length=50, default=NULL_STRING)
     report_datetime = models.DateTimeField(default=timezone.now)
 
     class Meta(BaseUuidModel.Meta):
@@ -1049,35 +1069,33 @@ class TestModelPermissions(BaseUuidModel):
 class TestModel3(CrfModelMixin, BaseUuidModel):
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(
-        verbose_name="Is it what it is?", max_length=10, choices=YES_NO
-    )
+    f1 = models.CharField(verbose_name="Is it what it is?", max_length=10, choices=YES_NO)
 
     f2 = models.CharField(
-        verbose_name="Are they serious?", max_length=10, null=True, blank=True
+        verbose_name="Are they serious?", max_length=10, default=NULL_STRING, blank=True
     )
 
     f3 = models.CharField(
-        verbose_name="Are you worried?", max_length=10, null=True, blank=False
+        verbose_name="Are you worried?", max_length=10, default=NULL_STRING, blank=False
     )
 
     f4 = models.CharField(
-        verbose_name="Would they dare?", max_length=10, null=True, blank=False
+        verbose_name="Would they dare?", max_length=10, default=NULL_STRING, blank=False
     )
 
     f5 = models.CharField(
         verbose_name="What am I going to tell them?",
         max_length=10,
-        null=True,
+        default=NULL_STRING,
         blank=False,
     )
 
     summary_one = models.CharField(
-        verbose_name="summary_one", max_length=10, null=True, blank=True
+        verbose_name="summary_one", max_length=10, default=NULL_STRING, blank=True
     )
 
     summary_two = models.CharField(
-        verbose_name="summary_two", max_length=10, null=True, blank=True
+        verbose_name="summary_two", max_length=10, default=NULL_STRING, blank=True
     )
 
     class Meta(CrfModelMixin.Meta, BaseUuidModel.Meta):
@@ -1088,35 +1106,33 @@ class TestModel3(CrfModelMixin, BaseUuidModel):
 class TestModel4(CrfModelMixin, BaseUuidModel):
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(
-        verbose_name="Is it what it is?", max_length=10, choices=YES_NO
-    )
+    f1 = models.CharField(verbose_name="Is it what it is?", max_length=10, choices=YES_NO)
 
     f2 = models.CharField(
-        verbose_name="Are they serious?", max_length=10, null=True, blank=True
+        verbose_name="Are they serious?", max_length=10, default=NULL_STRING, blank=True
     )
 
     f3 = models.CharField(
-        verbose_name="Are you worried?", max_length=10, null=True, blank=False
+        verbose_name="Are you worried?", max_length=10, default=NULL_STRING, blank=False
     )
 
     f4 = models.CharField(
-        verbose_name="Would they dare?", max_length=10, null=True, blank=False
+        verbose_name="Would they dare?", max_length=10, default=NULL_STRING, blank=False
     )
 
     f5 = models.CharField(
         verbose_name="What am I going to tell them?",
         max_length=10,
-        null=True,
+        default=NULL_STRING,
         blank=False,
     )
 
     summary_one = models.CharField(
-        verbose_name="summary_one", max_length=10, null=True, blank=True
+        verbose_name="summary_one", max_length=10, default=NULL_STRING, blank=True
     )
 
     summary_two = models.CharField(
-        verbose_name="summary_two", max_length=10, null=True, blank=True
+        verbose_name="summary_two", max_length=10, default=NULL_STRING, blank=True
     )
 
 
@@ -1138,10 +1154,10 @@ class TestModel6(TestModel3):
 class TestModelWithFk(models.Model):
     f1 = models.CharField(max_length=10)
     f2 = models.CharField(max_length=10)
-    f3 = models.CharField(max_length=10, null=True, blank=False)
-    f4 = models.CharField(max_length=10, null=True, blank=False)
+    f3 = models.CharField(max_length=10, default=NULL_STRING, blank=False)
+    f4 = models.CharField(max_length=10, default=NULL_STRING, blank=False)
     f5 = models.CharField(max_length=10)
-    f5_other = models.CharField(max_length=10, null=True)
+    f5_other = models.CharField(max_length=10, default=NULL_STRING)
     alphabet = models.ManyToManyField(Alphabet)
 
     class Meta:
@@ -1154,15 +1170,15 @@ class CustomRandomizationList(RandomizationListModelMixin, BaseUuidModel):
 
 
 class Prn(SiteModelMixin, BaseUuidModel):
-    subject_identifier = models.CharField(max_length=50, null=True, blank=True)
+    subject_identifier = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f2 = models.CharField(max_length=50, null=True, blank=True)
+    f2 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
-    f3 = models.CharField(max_length=50, null=True, blank=True)
+    f3 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
     class Meta(BaseUuidModel.Meta):
         pass
@@ -1173,7 +1189,7 @@ class PrnOne(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
 
 class PrnTwo(CrfModelMixin, BaseUuidModel):
@@ -1181,7 +1197,7 @@ class PrnTwo(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
 
 class PrnThree(CrfModelMixin, BaseUuidModel):
@@ -1189,7 +1205,7 @@ class PrnThree(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    f1 = models.CharField(max_length=50, null=True, blank=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING, blank=True)
 
 
 class Team(CrfModelMixin, BaseUuidModel):
@@ -1235,9 +1251,9 @@ class Member(SiteModelMixin, BaseUuidModel):
 class TeamWithDifferentFields(CrfModelMixin, BaseUuidModel):
     size = models.IntegerField()
 
-    name = models.CharField(max_length=36, null=True, blank=False)
+    name = models.CharField(max_length=36, default=NULL_STRING, blank=False)
 
-    color = models.CharField(max_length=36, null=True, blank=False)
+    color = models.CharField(max_length=36, default=NULL_STRING, blank=False)
 
     mood = models.CharField(max_length=36, default="good")
 
@@ -1247,7 +1263,7 @@ class TeamWithDifferentFields(CrfModelMixin, BaseUuidModel):
 
 
 class SubjectModelOne(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
-    screening_identifier = models.CharField(max_length=25, null=True)
+    screening_identifier = models.CharField(max_length=25, default=NULL_STRING)
 
     registration_identifier = models.UUIDField(unique=True, default=uuid.uuid4)
 
@@ -1261,7 +1277,7 @@ class SubjectModelOne(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
 class SubjectModelTwo(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
     """Note: registration_unique_field is overridden."""
 
-    subject_identifier = models.CharField(max_length=25, null=True)
+    subject_identifier = models.CharField(max_length=25, default=NULL_STRING)
 
     dob = models.DateField(null=True)
 
@@ -1273,7 +1289,7 @@ class SubjectModelTwo(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
 class SubjectModelThree(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
     """Note: registration_unique_field is overridden."""
 
-    subject_identifier = models.CharField(max_length=25, null=True)
+    subject_identifier = models.CharField(max_length=25, default=NULL_STRING)
 
     my_identifier = models.UUIDField(default=uuid.uuid4)
 
@@ -1291,7 +1307,7 @@ class SubjectModelThree(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
 class CrfMissingManager(BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
-    f1 = models.CharField(max_length=50, null=True)
+    f1 = models.CharField(max_length=50, default=NULL_STRING)
 
 
 class SpecimenResult(CrfModelMixin, BaseUuidModel):
@@ -1299,27 +1315,25 @@ class SpecimenResult(CrfModelMixin, BaseUuidModel):
 
     report_datetime = models.DateTimeField(default=timezone.now)
 
-    haemoglobin = models.DecimalField(
-        decimal_places=1, max_digits=6, null=True, blank=True
-    )
+    haemoglobin = models.DecimalField(decimal_places=1, max_digits=6, null=True, blank=True)
 
     haemoglobin_units = models.CharField(
         verbose_name="units",
         max_length=10,
         choices=((GRAMS_PER_DECILITER, GRAMS_PER_DECILITER),),
-        null=True,
+        default=NULL_STRING,
         blank=True,
     )
 
     haemoglobin_abnormal = models.CharField(
-        verbose_name="abnormal", choices=YES_NO, max_length=25, null=True, blank=True
+        verbose_name="abnormal", choices=YES_NO, max_length=25, default=NULL_STRING, blank=True
     )
 
     haemoglobin_reportable = models.CharField(
         verbose_name="reportable",
         choices=REPORTABLE,
         max_length=25,
-        null=True,
+        default=NULL_STRING,
         blank=True,
     )
 
@@ -1330,8 +1344,7 @@ class SpecimenResult(CrfModelMixin, BaseUuidModel):
     )
 
     results_reportable = models.CharField(
-        verbose_name="If any results are abnormal, are results within grade III "
-        "or above?",
+        verbose_name="If any results are abnormal, are results within grade III or above?",
         max_length=25,
         choices=YES_NO_NA,
     )
@@ -1431,7 +1444,7 @@ class ResultCrf(BloodResultsMethodsModelMixin, EgfrModelMixin, models.Model):
         verbose_name="units",
         max_length=10,
         choices=((MICROMOLES_PER_LITER, MICROMOLES_PER_LITER),),
-        null=True,
+        default=NULL_STRING,
         blank=True,
     )
 
@@ -1507,3 +1520,45 @@ class NonAdherenceReasons(ListModelMixin):
     class Meta(ListModelMixin.Meta):
         verbose_name = "Non-Adherence Reasons"
         verbose_name_plural = "Non-Adherence Reasons"
+
+
+class Antibiotic(BaseListModelMixin, BaseUuidModel):
+    class Meta(BaseUuidModel.Meta):
+        pass
+
+
+class Neurological(BaseListModelMixin, BaseUuidModel):
+    class Meta(BaseUuidModel.Meta):
+        pass
+
+
+class SignificantNewDiagnosis(BaseListModelMixin, BaseUuidModel):
+    class Meta(BaseUuidModel.Meta):
+        pass
+
+
+class Symptom(BaseListModelMixin, BaseUuidModel):
+    class Meta(BaseUuidModel.Meta):
+        pass
+
+
+class Consignee(BaseUuidModel):
+    name = models.CharField(max_length=25)
+
+    contact = models.CharField(max_length=25)
+
+    address = models.CharField(max_length=25)
+
+    class Meta(BaseUuidModel.Meta):
+        pass
+
+
+class Customer(BaseUuidModel):
+    name = models.CharField(max_length=25, unique=True)
+
+    contact = models.CharField(max_length=25)
+
+    address = models.CharField(max_length=25)
+
+    class Meta(BaseUuidModel.Meta):
+        pass

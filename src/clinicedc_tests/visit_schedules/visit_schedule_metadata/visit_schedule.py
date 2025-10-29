@@ -1,4 +1,16 @@
 from dateutil.relativedelta import relativedelta
+from edc_lab_panel.panels import (
+    blood_glucose_panel,
+    cd4_panel,
+    fbc_panel,
+    hba1c_panel,
+    insulin_panel,
+    lft_panel,
+    lipids_panel,
+    rft_panel,
+    sputum_panel,
+    vl_panel,
+)
 from edc_visit_schedule.schedule import Schedule
 from edc_visit_schedule.visit import (
     Crf,
@@ -21,9 +33,7 @@ def get_visit_schedule(cdef):
         """
 
         def __init__(self, name):
-            super().__init__(
-                requisition_model="clinicedc_tests.subjectrequisition", name=name
-            )
+            super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
 
     crfs_prn = CrfCollection(
         Crf(show_order=100, model=f"{app_label}.prnone"),
@@ -52,9 +62,7 @@ def get_visit_schedule(cdef):
         Crf(show_order=3, model=f"{app_label}.crfeight", required=True),
     )
 
-    crfs2 = CrfCollection(
-        Crf(show_order=1, model=f"{app_label}.crfseven", required=True)
-    )
+    crfs2 = CrfCollection(Crf(show_order=1, model=f"{app_label}.crfseven", required=True))
 
     crfs_unscheduled = CrfCollection(
         Crf(show_order=1, model=f"{app_label}.crffour", required=True),
@@ -63,51 +71,25 @@ def get_visit_schedule(cdef):
     )
 
     requisitions = RequisitionCollection(
-        Requisition(
-            show_order=10, panel=MockPanel("one"), required=True, additional=False
-        ),
-        Requisition(
-            show_order=20, panel=MockPanel("two"), required=True, additional=False
-        ),
-        Requisition(
-            show_order=30, panel=MockPanel("three"), required=False, additional=False
-        ),
-        Requisition(
-            show_order=40, panel=MockPanel("four"), required=False, additional=False
-        ),
-        Requisition(
-            show_order=50, panel=MockPanel("five"), required=False, additional=False
-        ),
-        Requisition(
-            show_order=60, panel=MockPanel("six"), required=False, additional=False
-        ),
-        Requisition(
-            show_order=70, panel=MockPanel("seven"), required=False, additional=False
-        ),
-        Requisition(
-            show_order=80, panel=MockPanel("eight"), required=False, additional=False
-        ),
+        Requisition(show_order=10, panel=fbc_panel, required=True, additional=False),
+        Requisition(show_order=20, panel=lft_panel, required=True, additional=False),
+        Requisition(show_order=30, panel=vl_panel, required=False, additional=False),
+        Requisition(show_order=40, panel=rft_panel, required=False, additional=False),
+        Requisition(show_order=50, panel=hba1c_panel, required=False, additional=False),
+        Requisition(show_order=60, panel=cd4_panel, required=False, additional=False),
+        Requisition(show_order=70, panel=lipids_panel, required=False, additional=False),
+        Requisition(show_order=80, panel=insulin_panel, required=False, additional=False),
     )
 
     requisitions3000 = RequisitionCollection(
-        Requisition(
-            show_order=10, panel=MockPanel("seven"), required=True, additional=False
-        )
+        Requisition(show_order=10, panel=lipids_panel, required=True, additional=False)
     )
 
     requisitions_unscheduled = RequisitionCollection(
-        Requisition(
-            show_order=10, panel=MockPanel("one"), required=True, additional=False
-        ),
-        Requisition(
-            show_order=20, panel=MockPanel("three"), required=True, additional=False
-        ),
-        Requisition(
-            show_order=30, panel=MockPanel("five"), required=True, additional=False
-        ),
-        Requisition(
-            show_order=90, panel=MockPanel("nine"), required=True, additional=False
-        ),
+        Requisition(show_order=10, panel=sputum_panel, required=True, additional=False),
+        Requisition(show_order=20, panel=blood_glucose_panel, required=True, additional=False),
+        Requisition(show_order=30, panel=MockPanel("five"), required=True, additional=False),
+        Requisition(show_order=90, panel=MockPanel("nine"), required=True, additional=False),
     )
 
     visit0 = Visit(

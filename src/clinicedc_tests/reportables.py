@@ -1,13 +1,14 @@
-from edc_constants.constants import FEMALE, MALE
-from edc_reportable import (
+from clinicedc_constants import (
+    FEMALE,
+    MALE,
     MICROMOLES_PER_LITER,
     MILLIGRAMS_PER_DECILITER,
     PERCENT,
     TEN_X_9_PER_LITER,
-    Formula,
 )
 from edc_reportable.adult_age_options import adult_age_options
 from edc_reportable.data import africa, daids_july_2017
+from edc_reportable.formula import Formula
 
 grading_data = {}
 grading_data.update(**daids_july_2017.dummies)

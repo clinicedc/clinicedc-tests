@@ -18,9 +18,7 @@ class Panel(DummyPanel):
     """
 
     def __init__(self, name):
-        super().__init__(
-            requisition_model="clinicedc_tests.subjectrequisition", name=name
-        )
+        super().__init__(requisition_model="clinicedc_tests.subjectrequisition", name=name)
 
 
 crfs = CrfCollection(
@@ -59,7 +57,7 @@ def get_visit_schedule(cdef):
 
     visits = []
     for index in range(4, 8):
-        visits.append(
+        visits.append(  # noqa: PERF401
             Visit(
                 code=f"{index + 1}000",
                 title=f"Day {index + 1}",
