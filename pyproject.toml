@@ -27,11 +27,13 @@ license = "GPL-3.0-or-later"
 license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "clinicedc>=2.0.39",
+    "coverage>=7.10.1",
     "faker>=37.4.2",
     "model-bakery>=1.20.5",
     "time-machine>=2.16.0",
     "tox-uv>=1.26.2",
+    "tox>=4.32.0",
+
 ]
 
 [project.urls]
@@ -143,25 +145,6 @@ lint = [
     "black>=25.1.0",
     "isort==5.13.2",
     "ruff>=0.12.5",
-]
-
-develop = [
-    "clinicedc",
-    'argon2-cffi',
-    'python-memcached',
-    'django-environ',
-    'django-storages',
-    'fontawesomefree',
-    "django-audit-fields",
-    'django-crypto-fields',
-    'django-revision',
-    'django-multisite2',
-    'django-simple-history',
-    'django-pandas',
-    'django-logentry-admin',
-    'django-admin-rangefilter',
-    'django-db-views',
-    "ipython>=9.5.0",
 ]
 
 [tool.uv.sources]
