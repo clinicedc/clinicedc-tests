@@ -43,8 +43,6 @@ from edc_crf.model_mixins import (
     CrfWithActionModelMixin,
 )
 from edc_egfr.model_mixins import EgfrDropNotificationModelMixin, EgfrModelMixin
-from edc_export.managers import ExportHistoryManager
-from edc_export.model_mixins import ExportTrackingFieldsModelMixin
 from edc_identifier.managers import SubjectIdentifierManager
 from edc_identifier.model_mixins import (
     NonUniqueSubjectIdentifierFieldMixin,
@@ -646,15 +644,13 @@ class ListTwo(BaseListModelMixin, BaseUuidModel):
     dte = models.DateTimeField(default=timezone.now)
 
 
-class CrfEncrypted(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel):
+class CrfEncrypted(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
     encrypted1 = EncryptedCharField(null=True)
 
-    export_history = ExportHistoryManager()
 
-
-class Crf(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel):
+class Crf(CrfModelMixin, BaseUuidModel):
     subject_visit = models.ForeignKey(SubjectVisit, on_delete=PROTECT)
 
     char1 = models.CharField(max_length=25, default=NULL_STRING)
@@ -666,8 +662,6 @@ class Crf(CrfModelMixin, ExportTrackingFieldsModelMixin, BaseUuidModel):
     uuid1 = models.UUIDField(null=True)
 
     m2m = models.ManyToManyField(ListModel)
-
-    export_history = ExportHistoryManager()
 
 
 class CrfOne(ActionModelMixin, CrfStatusModelMixin, SiteModelMixin, BaseUuidModel):
