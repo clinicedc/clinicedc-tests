@@ -1,6 +1,6 @@
 [project]
 name = "clinicedc-tests"
-version = "1.0.1"
+version = "1.1.0"
 description = "Shared test config and utils for clinicedc projects and related apps"
 readme = {file = "README.rst", content-type = "text/x-rst"}
 keywords = ["django", "clinicedc", "edc", "clinical trials", "research", "data management", "esource"]
@@ -28,12 +28,12 @@ license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.12,<3.14"
 dependencies = [
     "coverage>=7.10.1",
+    "django-mock-queries>=2.3.0",
     "faker>=37.4.2",
     "model-bakery>=1.20.5",
     "time-machine>=2.16.0",
     "tox-uv>=1.26.2",
     "tox>=4.32.0",
-
 ]
 
 [project.urls]
@@ -141,16 +141,7 @@ docs = [
     "sphinx-design>=0.6.1",
     "sphinx-inline-tabs>=2023.4.21",
 ]
-lint = [
-    "black>=25.1.0",
-    "isort==5.13.2",
-    "ruff>=0.12.5",
-]
+lint = ["ruff>=0.12.5"]
 
 [tool.uv.sources]
 clinicedc-tests = { workspace = true }
-clinicedc = { path = "../clinicedc", editable = true }
-django-audit-fields = { path = "../django-audit-fields", editable = true }
-django-crypto-fields = { path = "../django-crypto-fields", editable = true }
-django-revision = { path = "../django-revision", editable = true }
-django-multisite2 = { path = "../django-multisite2", editable = true }
