@@ -165,6 +165,7 @@ version = "1.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "coverage" },
+    { name = "django-mock-queries" },
     { name = "faker" },
     { name = "model-bakery" },
     { name = "time-machine" },
@@ -188,6 +189,7 @@ lint = [
 [package.metadata]
 requires-dist = [
     { name = "coverage", specifier = ">=7.10.1" },
+    { name = "django-mock-queries", specifier = ">=2.3.0" },
     { name = "faker", specifier = ">=37.4.2" },
     { name = "model-bakery", specifier = ">=1.20.5" },
     { name = "time-machine", specifier = ">=2.16.0" },
@@ -286,6 +288,32 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/05/a2/933dbbb3dd9990494960f6e64aca2af4c0745b63b7113f59a822df92329e/django-5.2.8.tar.gz", hash = "sha256:23254866a5bb9a2cfa6004e8b809ec6246eba4b58a7589bc2772f1bcc8456c7f", size = 10849032, upload-time = "2025-11-05T14:07:32.778Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5e/3d/a035a4ee9b1d4d4beee2ae6e8e12fe6dee5514b21f62504e22efcbd9fb46/django-5.2.8-py3-none-any.whl", hash = "sha256:37e687f7bd73ddf043e2b6b97cfe02fcbb11f2dbb3adccc6a2b18c6daa054d7f", size = 8289692, upload-time = "2025-11-05T14:07:28.761Z" },
+]
+
+[[package]]
+name = "django-mock-queries"
+version = "2.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "djangorestframework" },
+    { name = "model-bakery" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/81/9e/c8cb870abc00d8bc92c719f699ce988c4105501be7c67232af742eeb2085/django_mock_queries-2.3.0.tar.gz", hash = "sha256:3cc9c3922a1438ea7c318d61269ff9239b696d1d7c2ce4ebfa8cec3d1cf9b970", size = 20496, upload-time = "2024-09-26T15:29:06.816Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/97/06/4f413dcd1f914f8c569704eee26cdabd12f3bc8eadfb77fde197848ab40b/django_mock_queries-2.3.0-py2.py3-none-any.whl", hash = "sha256:71c538e0f41d10942ccdcabc450a25234875086ff91134b6bad62e08e1d21db1", size = 20385, upload-time = "2024-09-27T08:58:39.302Z" },
+]
+
+[[package]]
+name = "djangorestframework"
+version = "3.16.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8a/95/5376fe618646fde6899b3cdc85fd959716bb67542e273a76a80d9f326f27/djangorestframework-3.16.1.tar.gz", hash = "sha256:166809528b1aced0a17dc66c24492af18049f2c9420dbd0be29422029cfc3ff7", size = 1089735, upload-time = "2025-08-06T17:50:53.251Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b0/ce/bf8b9d3f415be4ac5588545b5fcdbbb841977db1c1d923f7568eeabe1689/djangorestframework-3.16.1-py3-none-any.whl", hash = "sha256:33a59f47fb9c85ede792cbf88bde71893bcda0667bc573f784649521f1102cec", size = 1080442, upload-time = "2025-08-06T17:50:50.667Z" },
 ]
 
 [[package]]
