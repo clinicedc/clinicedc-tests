@@ -1,8 +1,8 @@
 [project]
 name = "clinicedc-tests"
-version = "1.1.0"
+version = "1.2.0"
 description = "Shared test config and utils for clinicedc projects and related apps"
-readme = {file = "README.rst", content-type = "text/x-rst"}
+readme = { file = "README.rst", content-type = "text/x-rst" }
 keywords = ["django", "clinicedc", "edc", "clinical trials", "research", "data management", "esource"]
 authors = [
     { name = "Erik van Widenfelt", email = "ew2789@gmail.com" },
@@ -16,24 +16,23 @@ classifiers = [
     "Environment :: Web Environment",
     "Framework :: Django",
     "Framework :: Django :: 5.2",
-    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django :: 6.0",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 license = "GPL-3.0-or-later"
 license-files = ["LICEN[CS]E*"]
-requires-python = ">=3.12,<3.14"
+requires-python = ">=3.12,<3.15"
 dependencies = [
-    "coverage>=7.10.1",
+    "clinicedc>=2.9.4,<3",
     "django-mock-queries>=2.3.0",
     "faker>=37.4.2",
     "model-bakery>=1.20.5",
     "time-machine>=2.16.0",
-    "tox-uv>=1.26.2",
-    "tox>=4.32.0",
 ]
 
 [project.urls]
@@ -103,7 +102,7 @@ ignore = [
 
 
 [tool.ruff.lint.per-file-ignores]
-    "__init__.py" = ["F401"]
+"__init__.py" = ["F401"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 12
@@ -127,14 +126,19 @@ show_missing = true
 skip_covered = true
 omit = ["requirements.txt"]
 exclude_lines = [
-  "pragma: no cover",
-  "if TYPE_CHECKING:",
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
 ]
 
 [tool.rstcheck]
 ignore_directives = ["toctree"]
 
 [dependency-groups]
+dev = [
+    "coverage>=7.10.1",
+    "tox>=4.32.0",
+    "tox-uv>=1.26.2",
+]
 docs = [
     "furo>=2025.7.19",
     "sphinx>=8.2.3",
