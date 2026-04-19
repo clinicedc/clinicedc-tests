@@ -642,22 +642,20 @@ wheels = [
 
 [[package]]
 name = "clinicedc-tests"
-version = "1.2.0"
+version = "1.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "clinicedc" },
+    { name = "coverage" },
     { name = "django-mock-queries" },
     { name = "faker" },
     { name = "model-bakery" },
     { name = "time-machine" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "coverage" },
     { name = "tox" },
     { name = "tox-uv" },
 ]
+
+[package.dev-dependencies]
 docs = [
     { name = "furo" },
     { name = "sphinx" },
@@ -671,18 +669,17 @@ lint = [
 [package.metadata]
 requires-dist = [
     { name = "clinicedc", specifier = ">=2.9.4,<3" },
+    { name = "coverage", specifier = ">=7.13.5" },
     { name = "django-mock-queries", specifier = ">=2.3.0" },
     { name = "faker", specifier = ">=37.4.2" },
     { name = "model-bakery", specifier = ">=1.20.5" },
     { name = "time-machine", specifier = ">=2.16.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "coverage", specifier = ">=7.10.1" },
     { name = "tox", specifier = ">=4.32.0" },
     { name = "tox-uv", specifier = ">=1.26.2" },
 ]
+
+[package.metadata.requires-dev]
+dev = []
 docs = [
     { name = "furo", specifier = ">=2025.7.19" },
     { name = "sphinx", specifier = ">=8.2.3" },
