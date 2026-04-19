@@ -1,6 +1,6 @@
 [project]
 name = "clinicedc-tests"
-version = "1.2.1"
+version = "1.2.2"
 description = "Shared test config and utils for clinicedc projects and related apps"
 readme = { file = "README.rst", content-type = "text/x-rst" }
 keywords = ["django", "clinicedc", "edc", "clinical trials", "research", "data management", "esource"]
@@ -29,7 +29,6 @@ license-files = ["LICEN[CS]E*"]
 requires-python = ">=3.12,<3.15"
 
 dependencies = [
-    "clinicedc>=2.9.4,<3",
     "coverage>=7.13.5",
     "django-mock-queries>=2.3.0",
     "faker>=37.4.2",
