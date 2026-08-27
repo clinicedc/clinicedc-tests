@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import sys
+import tempfile
 from datetime import datetime
 from importlib.resources import files
 from pathlib import Path
@@ -192,6 +193,7 @@ class DefaultTestSettings:
                 "django.middleware.clickjacking.XFrameOptionsMiddleware",
                 "multisite.middleware.DynamicSiteMiddleware",
                 "django.contrib.sites.middleware.CurrentSiteMiddleware",
+                "simple_history.middleware.HistoryRequestMiddleware",
             ],
             LANGUAGE_CODE="en",
             TIME_ZONE="UTC",
@@ -247,6 +249,7 @@ class DefaultTestSettings:
             EDC_PROTOCOL_NUMBER="101",
             EDC_FACILITY_USE_DEFAULTS=True,
             EDC_FACILITY_DEFAULT_FACILITY_NAME="7-day-clinic",
+            EDC_LAB_RESULTS_IMPORT_PRIVATE_PATH=tempfile.mkdtemp(),
             LIST_MODEL_APP_LABEL=self.clinicedc_tests,
             EDC_RANDOMIZATION_LIST_PATH=self.base_dir / "tests" / "etc",
             EDC_RANDOMIZATION_REGISTER_DEFAULT_RANDOMIZER=True,
@@ -256,7 +259,12 @@ class DefaultTestSettings:
             EDC_SITES_MODULE_NAME=None,
             MULTISITE_REGISTER_POST_MIGRATE_SYNC_ALIAS=False,
             DATA_DICTIONARY_APP_LABELS=[],
-            DEFAULT_FILE_STORAGE="inmemorystorage.InMemoryStorage",
+            STORAGES={
+                "default": {"BACKEND": "django.core.files.storage.InMemoryStorage"},
+                "staticfiles": {
+                    "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+                },
+            },
             MIGRATION_MODULES=get_migrations_module(),
             PASSWORD_HASHERS=("django.contrib.auth.hashers.MD5PasswordHasher",),
         )
