@@ -42,6 +42,7 @@ def get_installed_apps_for_tests(*apps_to_test: str):
         "edc_lab_dashboard.apps.AppConfig",
         "edc_lab_panel.apps.AppConfig",
         "edc_lab_results.apps.AppConfig",
+        "edc_lab_results_import.apps.AppConfig",
         "edc_label.apps.AppConfig",
         "edc_list_data.apps.AppConfig",
         "edc_listboard.apps.AppConfig",
