@@ -1,7 +1,7 @@
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 from edc_listboard.views import SubjectListboardView
-from edc_protocol.research_protocol_config import ResearchProtocolConfig
+from edc_protocol.trial_settings import trial_settings
 from edc_subject_dashboard.views import SubjectDashboardView
 
 from .admin_site import clinicedc_tests_admin
@@ -15,12 +15,12 @@ urlpatterns = [
     *SubjectListboardView.urls(
         url_names_key="subject_listboard_url",
         namespace=app_name,
-        identifier_pattern=ResearchProtocolConfig().subject_identifier_pattern,
+        identifier_pattern=trial_settings.subject_identifier_pattern,
     ),
     *SubjectDashboardView.urls(
         url_names_key="subject_dashboard_url",
         namespace=app_name,
-        identifier_pattern=ResearchProtocolConfig().subject_identifier_pattern,
+        identifier_pattern=trial_settings.subject_identifier_pattern,
     ),
     *DashboardView.urls(
         namespace=app_name,
