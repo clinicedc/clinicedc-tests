@@ -61,7 +61,6 @@ class DefaultTestSettings:
         add_dashboard_middleware=None,
         add_lab_dashboard_middleware=None,
         add_adverse_event_dashboard_middleware=None,
-        add_multisite_middleware=None,
         template_dirs=None,
         selected_database: str | None = None,
         clinicedc_tests_label: str | None = None,
@@ -100,8 +99,6 @@ class DefaultTestSettings:
             self.settings["TEMPLATES"][0]["DIRS"] = template_dirs
 
         self.update_root_urlconf(use_test_urls)
-        if not add_multisite_middleware:
-            self.settings["MIDDLEWARE"].remove("multisite.middleware.DynamicSiteMiddleware")
 
         if add_dashboard_middleware:
             self.settings["MIDDLEWARE"].extend(
@@ -192,6 +189,7 @@ class DefaultTestSettings:
                 "django.contrib.messages.middleware.MessageMiddleware",
                 "django.middleware.clickjacking.XFrameOptionsMiddleware",
                 "multisite.middleware.DynamicSiteMiddleware",
+                "multisite.middleware.DynamicSiteTimezoneMiddleware",
                 "django.contrib.sites.middleware.CurrentSiteMiddleware",
                 "simple_history.middleware.HistoryRequestMiddleware",
             ],
@@ -204,7 +202,7 @@ class DefaultTestSettings:
             GIT_DIR=self.base_dir,
             LIVE_SYSTEM=False,
             REVIEWER_SITE_ID=0,
-            SITE_ID=SiteID(default=1) if SiteID else 1,
+            SITE_ID=SiteID(default=1),
             SILENCED_SYSTEM_CHECKS=["sites.E101"],  # The SITE_ID setting must be an integer
             SECRET_KEY=uuid4().hex,
             INDEX_PAGE_LABEL="",
@@ -257,7 +255,15 @@ class DefaultTestSettings:
             EDC_DATA_MANAGER_POPULATE_DATA_DICTIONARY=False,
             EDC_VISIT_SCHEDULE_POPULATE_VISIT_SCHEDULE=True,
             EDC_SITES_MODULE_NAME=None,
-            MULTISITE_TIME_ZONES={1: "UTC"},
+            MULTISITE_TIME_ZONES={
+                1: "UTC",
+                10: "Africa/Dar_es_Salaam",
+                20: "Africa/Gaborone",
+                30: "Africa/Capetown",
+                40: "Africa/Dar_es_Salaam",
+                50: "Africa/Dar_es_Salaam",
+                60: "Africa/Dar_es_Salaam",
+            },
             MULTISITE_REGISTER_POST_MIGRATE_SYNC_ALIAS=False,
             DATA_DICTIONARY_APP_LABELS=[],
             STORAGES={
